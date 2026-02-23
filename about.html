@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Jagan Sharma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Geist+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f9f9f8;
+      --ink: #111110;
+      --mid: #888884;
+      --line: #e2e2df;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Geist Mono', monospace;
+      font-weight: 300;
+      font-size: 13px;
+      letter-spacing: 0.01em;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.75rem 3rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-right a {
+      color: var(--mid);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-right a:hover,
+    .nav-right a.active { color: var(--ink); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 10rem 3rem 4rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 2rem;
+      opacity: 0;
+      animation: up 0.7s 0.1s forwards;
+    }
+
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      color: var(--mid);
+    }
+
+    .page-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      padding-bottom: 0.4rem;
+    }
+
+    /* ── MAIN GRID ── */
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 0;
+    }
+
+    /* ── PHOTO ── */
+    .photo-col {
+      padding: 4rem 3rem;
+      border-right: 1px solid var(--line);
+      opacity: 0;
+      animation: up 0.7s 0.25s forwards;
+    }
+
+    .photo-frame {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--line);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo-frame span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      font-weight: 300;
+      color: rgba(17,17,16,0.15);
+      user-select: none;
+    }
+
+    .photo-caption {
+      margin-top: 1rem;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    /* ── CONTENT COL ── */
+    .content-col {
+      opacity: 0;
+      animation: up 0.7s 0.35s forwards;
+    }
+
+    /* ── BIO ── */
+    .bio {
+      padding: 4rem 3rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 1.5rem;
+    }
+
+    .bio p {
+      font-size: 13px;
+      line-height: 1.95;
+      color: var(--mid);
+      margin-bottom: 1rem;
+      max-width: 560px;
+    }
+
+    .bio p:last-child { margin-bottom: 0; }
+
+    .bio p strong {
+      color: var(--ink);
+      font-weight: 400;
+    }
+
+    /* ── SKILLS ── */
+    .skills {
+      padding: 3rem 3rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem 3rem;
+      margin-top: 1.5rem;
+    }
+
+    .skill-group h3 {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .skill-tag {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mid);
+      background: var(--line);
+      padding: 3px 8px;
+      border-radius: 1px;
+    }
+
+    /* ── EXPERIENCE ── */
+    .experience {
+      padding: 3rem 3rem;
+    }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 7rem 1fr;
+      gap: 0 2rem;
+      padding: 1.25rem 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .exp-item:last-child {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .exp-year {
+      font-size: 11px;
+      color: var(--mid);
+      padding-top: 2px;
+      white-space: nowrap;
+    }
+
+    .exp-role {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 300;
+      margin-bottom: 0.2rem;
+    }
+
+    .exp-place {
+      font-size: 11px;
+      color: var(--mid);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 1.75rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      font-size: 11px;
+      color: var(--mid);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--ink); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes up {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1.25rem 1.5rem; }
+      .nav-right { gap: 1.5rem; }
+      .page-header { padding: 8rem 1.5rem 3rem; flex-direction: column; align-items: flex-start; }
+      .main { grid-template-columns: 1fr; }
+      .photo-col { padding: 3rem 1.5rem; border-right: none; border-bottom: 1px solid var(--line); }
+      .photo-frame { max-width: 280px; }
+      .bio, .skills, .experience { padding: 3rem 1.5rem; }
+      .skills-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .exp-item { grid-template-columns: 5rem 1fr; }
+      footer { flex-direction: column; gap: 1rem; padding: 1.5rem; text-align: center; }
+      .footer-links { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-name">Jagan Sharma</a>
+    <ul class="nav-right">
+      <li><a href="work.html">Work</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="https://github.com/harrytinklecloud" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <h1>About<br /><em>me</em></h1>
+    <p class="page-eyebrow">Jagan Sharma — 2025</p>
+  </header>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- PHOTO -->
+    <aside class="photo-col">
+      <div class="photo-frame">
+        <span>JS</span>
+      </div>
+      <p class="photo-caption">Jagan Sharma — Ventura, CA</p>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="content-col">
+
+      <!-- BIO -->
+      <div class="bio">
+        <p class="section-label">Background</p>
+        <p>
+          Hi, I'm <strong>Jagan</strong>. I make cool apps, AI projects, and the occasional robot 
+        </p>
+        <p>
+          This website is an portfolio/test for all of my apps and stuff so I can have experience with an actual domain
+        </p>
+        <p>
+        </p>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="skills">
+        <p class="section-label">Skills & tools</p>
+        <div class="skills-grid">
+          <div class="skill-group">
+            <h3>Design</h3>
+            <div class="skill-list">
+              <span class="skill-tag">Figma</span>
+              <span class="skill-tag">Sketch</span>
+              <span class="skill-tag">Framer</span>
+              <span class="skill-tag">Prototyping</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h3>Development</h3>
+            <div class="skill-list">
+              <span class="skill-tag">HTML</span>
+              <span class="skill-tag">CSS</span>
+              <span class="skill-tag">JavaScript</span>
+              <span class="skill-tag">Python</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h3>Other</h3>
+            <div class="skill-list">
+              <span class="skill-tag">Git</span>
+              <span class="skill-tag">Node</span>
+              <span class="skill-tag">Postgres</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h3>Interests</h3>
+            <div class="skill-list">
+              <span class="skill-tag">Coding</span>
+              <span class="skill-tag">AI</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPERIENCE -->
+      <div class="experience">
+        <p class="section-label">Experience</p>
+        <div class="exp-item">
+          <span class="exp-year">2024 – now</span>
+          <div>
+            <div class="exp-role">Student</div>
+            <div class="exp-place">Student</div>
+          </div>
+        </div>
+        <div class="exp-item">
+          <span class="exp-year">2021 – 2023</span>
+          <div>
+            <div class="exp-role">Student</div>
+            <div class="exp-place">Student</div>
+          </div>
+        </div>
+        <div class="exp-item">
+          <span class="exp-year">2019 – 2021</span>
+          <div>
+            <div class="exp-role">Student</div>
+            <div class="exp-place">Student</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <span class="footer-left">© 2025 Jagan Sharma</span>
+    <ul class="footer-links">
+      <li><a href="https://github.com/harrytinklecloud" target="_blank">GitHub</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>
