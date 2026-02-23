@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work — Jagan Sharma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Geist+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f9f9f8;
+      --ink: #111110;
+      --mid: #888884;
+      --line: #e2e2df;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Geist Mono', monospace;
+      font-weight: 300;
+      font-size: 13px;
+      letter-spacing: 0.01em;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.75rem 3rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-right a {
+      color: var(--mid);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-right a:hover,
+    .nav-right a.active { color: var(--ink); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 10rem 3rem 4rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 2rem;
+      opacity: 0;
+      animation: up 0.7s 0.1s forwards;
+    }
+
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      color: var(--mid);
+    }
+
+    .page-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      padding-bottom: 0.4rem;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      padding: 1.5rem 3rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: up 0.7s 0.2s forwards;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-right: 0.75rem;
+    }
+
+    .filter-btn {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      background: transparent;
+      border: 1px solid var(--line);
+      padding: 4px 10px;
+      border-radius: 1px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      color: var(--ink);
+      border-color: var(--ink);
+      background: transparent;
+    }
+
+    /* ── PROJECT LIST ── */
+    .project-list {
+      padding: 0 3rem;
+      opacity: 0;
+      animation: up 0.7s 0.3s forwards;
+    }
+
+    .project {
+      display: grid;
+      grid-template-columns: 3rem 1fr 160px auto;
+      align-items: center;
+      gap: 0 2rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s;
+    }
+
+    .project.hidden { display: none; }
+
+    .project::after {
+      content: '↗';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%) translateX(6px);
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      font-size: 12px;
+    }
+
+    .project:hover::after {
+      opacity: 0.35;
+      transform: translateY(-50%) translateX(0);
+    }
+
+    .project-num {
+      font-size: 10px;
+      color: var(--line);
+    }
+
+    .project-main {}
+
+    .project-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem;
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 0.4rem;
+      transition: color 0.2s;
+    }
+
+    .project:hover .project-title { color: var(--mid); }
+
+    .project-desc {
+      font-size: 12px;
+      color: var(--mid);
+      line-height: 1.6;
+      max-width: 480px;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .tag {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      background: var(--line);
+      padding: 2px 7px;
+      border-radius: 1px;
+    }
+
+    .project-year {
+      font-size: 11px;
+      color: var(--mid);
+      white-space: nowrap;
+      text-align: right;
+      padding-right: 1.5rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 1.75rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4rem;
+    }
+
+    .footer-left {
+      font-size: 11px;
+      color: var(--mid);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--ink); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes up {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1.25rem 1.5rem; }
+      .nav-right { gap: 1.5rem; }
+      .page-header { padding: 8rem 1.5rem 3rem; flex-direction: column; align-items: flex-start; }
+      .filter-bar { padding: 1.25rem 1.5rem; }
+      .project-list { padding: 0 1.5rem; }
+      .project { grid-template-columns: 2rem 1fr; gap: 0 1rem; }
+      .project-tags, .project-year { display: none; }
+      footer { flex-direction: column; gap: 1rem; padding: 1.5rem; text-align: center; }
+      .footer-links { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-name">Jagan Sharma</a>
+    <ul class="nav-right">
+      <li><a href="work.html" class="active">Work</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="https://github.com/harrytinklecloud" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <h1>Selected<br /><em>work</em></h1>
+    <p class="page-eyebrow">04 projects — 2023–2025</p>
+  </header>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <span class="filter-label">Filter</span>
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="Design">Design</button>
+    <button class="filter-btn" data-filter="Development">Development</button>
+    <button class="filter-btn" data-filter="Branding">Branding</button>
+    <button class="filter-btn" data-filter="Research">Research</button>
+  </div>
+
+  <!-- PROJECT LIST -->
+  <div class="project-list">
+
+    <a href="1.html" class="project" data-tags="Design Web">
+      <span class="project-num">01</span>
+      <div class="project-main">
+        <div class="project-title">Jarvis</div>
+        <div class="project-desc">A personal AI assistant that can actually do stuff, kinda like clawdbot</div>
+      </div>
+      <span class="project-year">2025</span>
+      <div class="project-tags">
+        <span class="tag">Design</span>
+        <span class="tag">Web</span>
+      </div>
+    </a>
+
+    <a href="2.html" class="project" data-tags="Development App">
+      <span class="project-num">02</span>
+      <div class="project-main">
+        <div class="project-title">Americanio</div>
+        <div class="project-desc">First generation of jarvis, failed </div>
+      </div>
+      <span class="project-year">2024</span>
+      <div class="project-tags">
+        <span class="tag">Development</span>
+        <span class="tag">AI</span>
+      </div>
+    </a>
+
+    <a href="3.html" class="project" data-tags="Branding Identity">
+      <span class="project-num">03</span>
+      <div class="project-main">
+        <div class="project-title">AI Nerual Network</div>
+        <div class="project-desc">The very, very first fundimentals of Jarvis.</div>
+      </div>
+      <span class="project-year">2024</span>
+      <div class="project-tags">
+        <span class="tag">AI</span>
+        <span class="tag">Identity</span>
+      </div>
+    </a>
+
+    <a href="4.html" class="project" data-tags="Research Strategy">
+      <span class="project-num">04</span>
+      <div class="project-main">
+        <div class="project-title">PlanIt</div>
+        <div class="project-desc">Very, very simple planner made in scratch</div>
+      </div>
+      <span class="project-year">2023</span>
+      <div class="project-tags">
+        <span class="tag">Research</span>
+        <span class="tag">Strategy</span>
+      </div>
+    </a>
+
+  </div>
+
+  <footer>
+    <span class="footer-left">© 2025 Jagan Sharma</span>
+    <ul class="footer-links">
+      <li><a href="https://github.com/harrytinklecloud" target="_blank">GitHub</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    const btns = document.querySelectorAll('.filter-btn');
+    const projects = document.querySelectorAll('.project');
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.dataset.filter;
+
+        projects.forEach(p => {
+          const tags = p.dataset.tags || '';
+          if (filter === 'all' || tags.includes(filter)) {
+            p.classList.remove('hidden');
+          } else {
+            p.classList.add('hidden');
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
