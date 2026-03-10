@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Jagan Sharma</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #080808;
+      --off: #111;
+      --white: #f0f0f0;
+      --accent: #ff3c00;
+      --muted: #555;
+      --border: #1e1e1e;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      overflow: hidden;
+      cursor: none;
+    }
+
+    /* diagonal stripe */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -55deg,
+        transparent,
+        transparent 80px,
+        rgba(255,60,0,0.018) 80px,
+        rgba(255,60,0,0.018) 81px
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── CURSOR ── */
+    #cur {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .2s, height .2s;
+    }
+    #cur.big { width: 36px; height: 36px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8,8,8,0.92);
+      backdrop-filter: blur(8px);
+    }
+
+    .logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+
+    .btn-nav {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--accent);
+      padding: 10px 22px;
+      text-decoration: none;
+      transition: opacity .15s;
+    }
+    .btn-nav:hover { opacity: .8; }
+
+    /* ── MAIN ── */
+    main {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 48px;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .err-code {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(160px, 28vw, 380px);
+      line-height: 1;
+      letter-spacing: -4px;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,60,0,0.2);
+      user-select: none;
+      position: absolute;
+      top: 50%;
+      left: 48px;
+      transform: translateY(-50%);
+      z-index: -1;
+      animation: fadein .5s .1s both;
+    }
+
+    .tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadein .5s .2s both;
+    }
+    .tag::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 40px;
+      background: var(--accent);
+    }
+
+    .headline {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(52px, 8vw, 110px);
+      text-transform: uppercase;
+      line-height: .9;
+      letter-spacing: -1px;
+      animation: fadein .6s .35s both;
+    }
+
+    .headline em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .sub {
+      margin-top: 28px;
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 380px;
+      animation: fadein .6s .5s both;
+    }
+
+    .actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 44px;
+      animation: fadein .6s .65s both;
+    }
+
+    .btn-primary {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--accent);
+      padding: 14px 36px;
+      text-decoration: none;
+      transition: opacity .2s, transform .2s;
+    }
+    .btn-primary:hover { opacity: .85; transform: translateY(-2px); }
+
+    .btn-ghost {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 14px 36px;
+      text-decoration: none;
+      transition: color .2s, border-color .2s, transform .2s;
+    }
+    .btn-ghost:hover { color: var(--white); border-color: var(--white); transform: translateY(-2px); }
+
+    /* ticker at bottom */
+    .ticker-wrap {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      border-top: 1px solid var(--border);
+      padding: 16px 0;
+      background: var(--black);
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .ticker-track {
+      display: flex;
+      gap: 64px;
+      width: max-content;
+      animation: ticker 16s linear infinite;
+    }
+
+    .ticker-track span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .t-dot { color: var(--accent) !important; }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      main { padding: 0 24px; }
+      .err-code { left: 24px; font-size: 38vw; }
+      .actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cur"></div>
+
+<nav>
+  <a class="logo" href="index.html">JS<span>.</span></a>
+  <a class="btn-nav" href="index.html">← Home</a>
+</nav>
+
+<main>
+  <div class="err-code">404</div>
+
+  <p class="tag">Error</p>
+  <h1 class="headline">Nothing<br />here.<br /><em>Move on.</em></h1>
+  <p class="sub">Whatever you were looking for doesn't exist here. Might never have. Head back and find something that does.</p>
+
+  <div class="actions">
+    <a class="btn-primary" href="index.html">Back to Home</a>
+    <a class="btn-ghost" href="hub.html">Cool Stuff →</a>
+  </div>
+</main>
+
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span>NOTHING HERE</span><span class="t-dot"> // </span>
+    <span>WRONG TURN</span><span class="t-dot"> // </span>
+    <span>PAGE NOT FOUND</span><span class="t-dot"> // </span>
+    <span>KEEP MOVING</span><span class="t-dot"> // </span>
+    <span>404</span><span class="t-dot"> // </span>
+    <span>DOESN'T EXIST</span><span class="t-dot"> // </span>
+    <span>NOTHING HERE</span><span class="t-dot"> // </span>
+    <span>WRONG TURN</span><span class="t-dot"> // </span>
+    <span>PAGE NOT FOUND</span><span class="t-dot"> // </span>
+    <span>KEEP MOVING</span><span class="t-dot"> // </span>
+    <span>404</span><span class="t-dot"> // </span>
+    <span>DOESN'T EXIST</span><span class="t-dot"> // </span>
+  </div>
+</div>
+
+<script>
+  const cur = document.getElementById('cur');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('big'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+  });
+</script>
+
+</body>
+</html>
