@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dev Playground</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:Inter,sans-serif;
+background:#0f172a;
+color:white;
+display:flex;
+flex-direction:column;
+height:100vh;
+}
+
+header{
+background:#020617;
+padding:14px 20px;
+border-bottom:1px solid #1e293b;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.controls{
+display:flex;
+gap:10px;
+}
+
+button{
+background:#38bdf8;
+border:none;
+padding:8px 14px;
+border-radius:6px;
+cursor:pointer;
+font-weight:600;
+}
+
+button:hover{
+background:#0ea5e9;
+}
+
+.container{
+flex:1;
+display:grid;
+grid-template-columns:1fr 1fr;
+}
+
+.editors{
+display:grid;
+grid-template-rows:1fr 1fr 1fr;
+border-right:1px solid #1e293b;
+}
+
+.editor{
+display:flex;
+flex-direction:column;
+}
+
+.editor label{
+background:#020617;
+padding:6px 10px;
+font-size:12px;
+border-bottom:1px solid #1e293b;
+}
+
+.editor-box{
+flex:1;
+}
+
+.preview{
+display:flex;
+flex-direction:column;
+position:relative;
+}
+
+.preview label{
+background:#020617;
+padding:6px 10px;
+font-size:12px;
+border-bottom:1px solid #1e293b;
+}
+
+iframe{
+flex:1;
+border:none;
+background:white;
+}
+
+.copy-popup{
+position:fixed;
+bottom:30px;
+left:50%;
+transform:translateX(-50%) translateY(20px);
+background:#22c55e;
+color:white;
+padding:10px 18px;
+border-radius:8px;
+opacity:0;
+transition:.3s;
+}
+
+.copy-popup.show{
+opacity:1;
+transform:translateX(-50%) translateY(0);
+}
+
+.fullscreen-btn{
+position:absolute;
+top:6px;
+right:10px;
+font-size:12px;
+padding:4px 10px;
+background:#6366f1;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h3>Dev Playground</h3>
+
+<div class="controls">
+<button onclick="runCode()">Run</button>
+<button onclick="shareCode()">Share</button>
+<button onclick="resetCode()">Reset</button>
+</div>
+
+</header>
+
+<div class="container">
+
+<div class="editors">
+
+<div class="editor">
+<label>HTML</label>
+<div id="htmlEditor" class="editor-box"></div>
+</div>
+
+<div class="editor">
+<label>CSS</label>
+<div id="cssEditor" class="editor-box"></div>
+</div>
+
+<div class="editor">
+<label>JavaScript</label>
+<div id="jsEditor" class="editor-box"></div>
+</div>
+
+</div>
+
+<div class="preview" id="previewContainer">
+
+<label>Live Preview</label>
+
+<button class="fullscreen-btn" onclick="toggleFullscreen()">Fullscreen</button>
+
+<iframe id="preview"></iframe>
+
+</div>
+
+</div>
+
+<div class="copy-popup" id="popup">Share link copied!</div>
+
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+
+<script>
+
+let htmlEditor, cssEditor, jsEditor
+let isFullscreen=false
+
+require.config({
+paths:{vs:"https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs"}
+})
+
+require(["vs/editor/editor.main"],function(){
+
+htmlEditor=monaco.editor.create(document.getElementById("htmlEditor"),{
+value:`<h1>Hello Developer</h1>
+<p>Edit code and press Run.</p>`,
+language:"html",
+theme:"vs-dark",
+automaticLayout:true
+})
+
+cssEditor=monaco.editor.create(document.getElementById("cssEditor"),{
+value:`body{
+font-family:sans-serif;
+background:#f1f5f9;
+text-align:center;
+padding:40px;
+}`,
+language:"css",
+theme:"vs-dark",
+automaticLayout:true
+})
+
+jsEditor=monaco.editor.create(document.getElementById("jsEditor"),{
+value:`console.log("Playground ready")`,
+language:"javascript",
+theme:"vs-dark",
+automaticLayout:true
+})
+
+loadFromURL()
+runCode()
+
+})
+
+function runCode(){
+
+const html=htmlEditor.getValue()
+const css=cssEditor.getValue()
+const js=jsEditor.getValue()
+
+const preview=document.getElementById("preview").contentWindow.document
+
+preview.open()
+
+preview.write(`
+<html>
+<head>
+<style>${css}</style>
+</head>
+<body>
+${html}
+<script>
+${js}
+<\/script>
+</body>
+</html>
+`)
+
+preview.close()
+
+}
+
+function resetCode(){
+
+htmlEditor.setValue(`<h1>Hello Developer</h1>
+<p>Edit code and press Run.</p>`)
+
+cssEditor.setValue(`body{
+font-family:sans-serif;
+background:#f1f5f9;
+text-align:center;
+padding:40px;
+}`)
+
+jsEditor.setValue(`console.log("Playground ready")`)
+
+runCode()
+
+}
+
+function shareCode(){
+
+const html=btoa(htmlEditor.getValue())
+const css=btoa(cssEditor.getValue())
+const js=btoa(jsEditor.getValue())
+
+const url=`${window.location.href.split("?")[0]}?html=${html}&css=${css}&js=${js}`
+
+navigator.clipboard.writeText(url)
+
+showPopup()
+
+}
+
+function showPopup(){
+
+const popup=document.getElementById("popup")
+
+popup.classList.add("show")
+
+setTimeout(()=>{popup.classList.remove("show")},2000)
+
+}
+
+function loadFromURL(){
+
+const params=new URLSearchParams(window.location.search)
+
+if(params.has("html")){
+htmlEditor.setValue(atob(params.get("html")))
+}
+
+if(params.has("css")){
+cssEditor.setValue(atob(params.get("css")))
+}
+
+if(params.has("js")){
+jsEditor.setValue(atob(params.get("js")))
+}
+
+}
+
+function toggleFullscreen(){
+
+const container=document.getElementById("previewContainer")
+
+if(!isFullscreen){
+
+if(container.requestFullscreen){
+container.requestFullscreen()
+}
+
+isFullscreen=true
+
+}else{
+
+if(document.exitFullscreen){
+document.exitFullscreen()
+}
+
+isFullscreen=false
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
