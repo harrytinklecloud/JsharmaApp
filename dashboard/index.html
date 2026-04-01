@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — jagansharma.com</title>
+<style>
+  :root {
+    --bg:         #050810;
+    --bg-mid:     #080d1a;
+    --bg-card:    #0c1225;
+    --bg-hover:   #111a35;
+    --accent:     #4f8ef7;
+    --accent-2:   #7c5cfc;
+    --danger:     #ef4444;
+    --success:    #22c55e;
+    --warning:    #f59e0b;
+    --text:       #e8edf5;
+    --muted:      #6b7a99;
+    --dim:        #3a4560;
+    --border:     rgba(79,142,247,0.13);
+    --border-h:   rgba(79,142,247,0.32);
+    --radius:     10px;
+    --mono:       'Courier New', monospace;
+    --sans:       Georgia, serif;
+    --trans:      0.22s cubic-bezier(.4,0,.2,1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── LOCK SCREEN ── */
+  #lock {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .lock-box {
+    width: 360px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 44px 40px 40px;
+    display: flex; flex-direction: column; gap: 20px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+  }
+
+  .lock-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: .08em;
+    margin-bottom: 4px;
+  }
+
+  .lock-title {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -.01em;
+  }
+
+  .lock-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: -8px;
+  }
+
+  .lock-field {
+    display: flex; flex-direction: column; gap: 7px;
+  }
+
+  .lock-field label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .lock-field input {
+    background: var(--bg-mid);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 15px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color var(--trans);
+    letter-spacing: .15em;
+  }
+
+  .lock-field input:focus { border-color: var(--accent); }
+
+  .lock-btn {
+    background: var(--accent);
+    border: none; border-radius: var(--radius);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 12px;
+    cursor: pointer;
+    transition: all var(--trans);
+  }
+
+  .lock-btn:hover { background: #3a7ae8; box-shadow: 0 0 24px rgba(79,142,247,.35); }
+
+  .lock-error {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--danger);
+    text-align: center;
+    min-height: 18px;
+    letter-spacing: .04em;
+  }
+
+  /* shake animation */
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-8px)}
+    40%{transform:translateX(8px)}
+    60%{transform:translateX(-6px)}
+    80%{transform:translateX(6px)}
+  }
+  .shake { animation: shake .4s ease; }
+
+  /* ── DASHBOARD ── */
+  #app { display: none; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 220px;
+    background: var(--bg-mid);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    z-index: 50;
+    padding: 0;
+  }
+
+  .sidebar-logo {
+    padding: 22px 22px 18px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+  }
+
+  .sidebar-logo .s-tag {
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .sidebar-logo .s-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: .02em;
+  }
+
+  .sidebar-logo .s-name span { color: var(--accent); }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 16px 12px;
+    display: flex; flex-direction: column; gap: 4px;
+    overflow-y: auto;
+  }
+
+  .nav-section {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--dim);
+    padding: 12px 10px 6px;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all var(--trans);
+    border: 1px solid transparent;
+    letter-spacing: .02em;
+  }
+
+  .nav-item:hover { background: var(--bg-hover); color: var(--text); }
+
+  .nav-item.active {
+    background: rgba(79,142,247,.1);
+    border-color: rgba(79,142,247,.25);
+    color: var(--accent);
+  }
+
+  .nav-item .ni-icon { font-size: 14px; width: 18px; text-align: center; }
+
+  .sidebar-footer {
+    padding: 16px 14px;
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  .save-btn {
+    background: var(--success);
+    border: none; border-radius: var(--radius);
+    color: #fff; font-family: var(--mono);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 10px; cursor: pointer;
+    transition: all var(--trans);
+    width: 100%;
+  }
+
+  .save-btn:hover { background: #16a34a; box-shadow: 0 0 18px rgba(34,197,94,.3); }
+
+  .export-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--muted); font-family: var(--mono);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 9px; cursor: pointer;
+    transition: all var(--trans);
+    width: 100%;
+  }
+
+  .export-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .lock-out-btn {
+    background: transparent;
+    border: 1px solid rgba(239,68,68,.25);
+    border-radius: var(--radius);
+    color: rgba(239,68,68,.6); font-family: var(--mono);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 9px; cursor: pointer;
+    transition: all var(--trans);
+    width: 100%;
+  }
+
+  .lock-out-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* MAIN CONTENT */
+  .main {
+    margin-left: 220px;
+    min-height: 100vh;
+    padding: 36px 40px;
+  }
+
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 36px;
+  }
+
+  .topbar-title {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -.01em;
+  }
+
+  .topbar-title span { color: var(--accent); }
+
+  .topbar-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--success);
+    border: 1px solid rgba(34,197,94,.3);
+    background: rgba(34,197,94,.07);
+    padding: 4px 12px;
+    border-radius: 99px;
+    letter-spacing: .06em;
+  }
+
+  /* PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* OVERVIEW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-sub {
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 4px;
+  }
+
+  /* SECTION HEADING */
+  .panel-section {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  /* ADD BUTTON */
+  .add-btn {
+    background: rgba(79,142,247,.1);
+    border: 1px solid rgba(79,142,247,.3);
+    border-radius: var(--radius);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .06em;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: all var(--trans);
+  }
+
+  .add-btn:hover { background: rgba(79,142,247,.2); }
+
+  /* EDITABLE LIST */
+  .item-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 36px; }
+
+  .item-row {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    display: grid;
+    gap: 10px;
+    align-items: center;
+    transition: border-color var(--trans);
+  }
+
+  .item-row:hover { border-color: var(--border-h); }
+
+  /* project cards: icon | title | desc | link | actions */
+  .item-row.project-row {
+    grid-template-columns: 56px 1fr 2fr 1fr auto;
+  }
+
+  /* lab cards: icon | title | desc | actions */
+  .item-row.lab-row {
+    grid-template-columns: 56px 1fr 2fr auto;
+  }
+
+  /* quick cards: icon | label | sub | actions */
+  .item-row.quick-row {
+    grid-template-columns: 56px 1fr 1.5fr auto;
+  }
+
+  /* hero: full width fields */
+  .item-row.hero-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .item-row.hero-row.wide {
+    grid-template-columns: 1fr;
+  }
+
+  .field-wrap { display: flex; flex-direction: column; gap: 4px; }
+
+  .field-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .field-input, .field-textarea {
+    background: var(--bg-mid);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 7px 10px;
+    outline: none;
+    width: 100%;
+    transition: border-color var(--trans);
+  }
+
+  .field-input:focus, .field-textarea:focus { border-color: var(--accent); }
+
+  .field-textarea { resize: vertical; min-height: 60px; font-family: var(--sans); font-size: 12px; }
+
+  .emoji-input {
+    font-size: 20px;
+    text-align: center;
+    padding: 8px 6px;
+    width: 100%;
+    background: var(--bg-mid);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    outline: none;
+    cursor: text;
+    transition: border-color var(--trans);
+  }
+
+  .emoji-input:focus { border-color: var(--accent); }
+
+  .row-actions { display: flex; gap: 6px; align-items: center; }
+
+  .del-btn {
+    background: rgba(239,68,68,.1);
+    border: 1px solid rgba(239,68,68,.25);
+    border-radius: 6px;
+    color: var(--danger);
+    font-size: 13px;
+    width: 30px; height: 30px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all var(--trans);
+    font-family: var(--mono);
+  }
+
+  .del-btn:hover { background: rgba(239,68,68,.2); }
+
+  .drag-handle {
+    cursor: grab;
+    color: var(--dim);
+    font-size: 16px;
+    padding: 4px;
+    user-select: none;
+  }
+
+  .drag-handle:active { cursor: grabbing; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    letter-spacing: .04em;
+    box-shadow: 0 16px 48px rgba(0,0,0,.5);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all .3s ease;
+    z-index: 200;
+    pointer-events: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.success { border-color: rgba(34,197,94,.4); }
+  .toast.error   { border-color: rgba(239,68,68,.4); }
+
+  /* PASSWORD CHANGE */
+  .settings-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    max-width: 420px;
+    display: flex; flex-direction: column; gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .settings-title {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .settings-sub { font-size: 12px; color: var(--muted); }
+
+  .inline-btn {
+    background: var(--accent);
+    border: none; border-radius: var(--radius);
+    color: #fff; font-family: var(--mono);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 10px 20px; cursor: pointer;
+    transition: all var(--trans);
+    align-self: flex-start;
+  }
+
+  .inline-btn:hover { background: #3a7ae8; }
+
+  /* DRAG OVER */
+  .item-row.drag-over {
+    border-color: var(--accent);
+    background: rgba(79,142,247,.05);
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 99px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     LOCK SCREEN
+══════════════════════════════ -->
+<div id="lock">
+  <div class="lock-box">
+    <div>
+      <div class="lock-logo">> jagansharma.com</div>
+      <div class="lock-title">Admin Dashboard</div>
+    </div>
+    <p class="lock-sub">Enter your password to continue.</p>
+    <div class="lock-field">
+      <label>Password</label>
+      <input type="password" id="pw-input" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="lock-btn" onclick="tryLogin()">Unlock</button>
+    <div class="lock-error" id="lock-error"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     APP
+══════════════════════════════ -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="s-tag">// admin</div>
+      <div class="s-name"><span>></span> jagansharma</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">Overview</div>
+      <div class="nav-item active" data-panel="overview" onclick="switchPanel(this)">
+        <span class="ni-icon">◈</span> Overview
+      </div>
+
+      <div class="nav-section">Content</div>
+      <div class="nav-item" data-panel="hero" onclick="switchPanel(this)">
+        <span class="ni-icon">⬡</span> Hero
+      </div>
+      <div class="nav-item" data-panel="projects" onclick="switchPanel(this)">
+        <span class="ni-icon">◉</span> Projects
+      </div>
+      <div class="nav-item" data-panel="lab" onclick="switchPanel(this)">
+        <span class="ni-icon">⚗</span> Dev Lab
+      </div>
+      <div class="nav-item" data-panel="quick" onclick="switchPanel(this)">
+        <span class="ni-icon">⚡</span> Quick Access
+      </div>
+
+      <div class="nav-section">Site</div>
+      <div class="nav-item" data-panel="settings" onclick="switchPanel(this)">
+        <span class="ni-icon">⚙</span> Settings
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="save-btn" onclick="saveAll()">✓ Save Changes</button>
+      <button class="export-btn" onclick="exportHTML()">↓ Export index.html</button>
+      <button class="lock-out-btn" onclick="lockOut()">⎋ Lock</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="topbar">
+      <div class="topbar-title">Dashboard <span id="panel-name">/ Overview</span></div>
+      <div class="topbar-badge">● Live</div>
+    </div>
+
+    <!-- ── OVERVIEW ── -->
+    <div class="panel active" id="panel-overview">
+      <div class="stats-row" id="stats-row"></div>
+
+      <div class="panel-section">Recent Activity</div>
+      <div id="activity-log" style="font-family:var(--mono);font-size:12px;color:var(--muted);line-height:2;">
+        No changes yet this session.
+      </div>
+    </div>
+
+    <!-- ── HERO ── -->
+    <div class="panel" id="panel-hero">
+      <div class="panel-section">Hero Section</div>
+      <div class="item-list" id="hero-fields"></div>
+    </div>
+
+    <!-- ── PROJECTS ── -->
+    <div class="panel" id="panel-projects">
+      <div class="panel-section">
+        Project Cards
+        <button class="add-btn" onclick="addProject()">+ Add Card</button>
+      </div>
+      <div class="item-list" id="project-list"></div>
+    </div>
+
+    <!-- ── DEV LAB ── -->
+    <div class="panel" id="panel-lab">
+      <div class="panel-section">
+        Dev Lab Cards
+        <button class="add-btn" onclick="addLab()">+ Add Card</button>
+      </div>
+      <div class="item-list" id="lab-list"></div>
+    </div>
+
+    <!-- ── QUICK ACCESS ── -->
+    <div class="panel" id="panel-quick">
+      <div class="panel-section">
+        Quick Access Items
+        <button class="add-btn" onclick="addQuick()">+ Add Item</button>
+      </div>
+      <div class="item-list" id="quick-list"></div>
+    </div>
+
+    <!-- ── SETTINGS ── -->
+    <div class="panel" id="panel-settings">
+      <div class="panel-section">Settings</div>
+
+      <div class="settings-card">
+        <div>
+          <div class="settings-title">Change Password</div>
+          <div class="settings-sub">Update your dashboard login password.</div>
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Current Password</div>
+          <input class="field-input" type="password" id="s-cur-pw" placeholder="Current password">
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">New Password</div>
+          <input class="field-input" type="password" id="s-new-pw" placeholder="New password (min 6 chars)">
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Confirm New Password</div>
+          <input class="field-input" type="password" id="s-confirm-pw" placeholder="Confirm new password">
+        </div>
+        <button class="inline-btn" onclick="changePassword()">Update Password</button>
+      </div>
+
+      <div class="settings-card">
+        <div>
+          <div class="settings-title">Site Meta</div>
+          <div class="settings-sub">Update the page title and contact email.</div>
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Page Title</div>
+          <input class="field-input" type="text" id="s-title" placeholder="Jagan Sharma — Coding Hub">
+        </div>
+        <div class="field-wrap">
+          <div class="field-label">Contact Email</div>
+          <input class="field-input" type="email" id="s-email" placeholder="hello@jagansharma.com">
+        </div>
+        <button class="inline-btn" onclick="saveMeta()">Save Meta</button>
+      </div>
+
+      <div class="settings-card" style="border-color:rgba(239,68,68,.2)">
+        <div>
+          <div class="settings-title" style="color:var(--danger)">Danger Zone</div>
+          <div class="settings-sub">Reset all content back to the default state. This cannot be undone.</div>
+        </div>
+        <button class="inline-btn" style="background:var(--danger)" onclick="resetAll()">Reset All Content</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════
+   DEFAULT DATA
+══════════════════════ */
+const DEFAULTS = {
+  password: 'jagan2025',
+
+  hero: {
+    tag:      'Live from orbit',
+    title:    'Jagan Sharma',
+    titleAccent: 'Coding Hub',
+    subtitle: 'A space for experiments, tools, and software.'
+  },
+
+  meta: {
+    pageTitle: 'Jagan Sharma — Coding Hub',
+    email:     'hello@jagansharma.com'
+  },
+
+  projects: [
+    { icon: '🤖', title: 'AI Experiments',  desc: 'Prompting, fine-tuning, voice interfaces, and whatever else the model can do.', link: '' },
+    { icon: '🔧', title: 'Web Tools',        desc: 'Browser-based utilities for everyday developer friction. Zero installs required.', link: '' },
+    { icon: '📈', title: 'Open Source',      desc: 'Libraries, scripts, and CLI tools released to the wild. Forks welcome.', link: '' },
+    { icon: '💻', title: 'Code Playground',  desc: 'Live interactive snippets and in-browser interpreters for learning and testing.', link: 'playground/index.html' },
+    { icon: '📱', title: 'Mini Apps',        desc: 'Self-contained single-page apps built fast to solve specific problems.', link: '' }
+  ],
+
+  lab: [
+    { icon: '⚡', title: 'JavaScript Experiments', desc: 'Runtime edge cases, performance benchmarks, and API explorations.' },
+    { icon: '🔄', title: 'Algorithms',             desc: 'Visualised sorting, graph traversal, and data structure demos.' },
+    { icon: '🌟', title: 'Web Animation',          desc: 'CSS, canvas, WebGL, and GSAP experiments pushed to the limit.' },
+    { icon: '🔧', title: 'Systems Programming',    desc: 'Low-level Rust and C exploration, memory models, and OS concepts.' }
+  ],
+
+  quick: [
+    { icon: '📋', label: 'Code Snippets', sub: 'Reusable patterns',      link: '' },
+    { icon: '🔨', label: 'Dev Tools',     sub: 'Format, diff, convert',   link: '' },
+    { icon: '🔁', label: 'Sandbox',       sub: 'Throw things at the wall', link: '' }
+  ]
+};
+
+/* ══════════════════════
+   STATE
+══════════════════════ */
+let state = {};
+let activityLog = [];
+let dragSrc = null;
+
+function loadState() {
+  const saved = localStorage.getItem('jagan_dashboard');
+  if (saved) {
+    try { state = JSON.parse(saved); }
+    catch { state = JSON.parse(JSON.stringify(DEFAULTS)); }
+  } else {
+    state = JSON.parse(JSON.stringify(DEFAULTS));
+  }
+  // ensure password field exists
+  if (!state.password) state.password = DEFAULTS.password;
+  if (!state.meta)     state.meta     = JSON.parse(JSON.stringify(DEFAULTS.meta));
+}
+
+function saveState() {
+  // pull current values from DOM before saving
+  collectFromDOM();
+  localStorage.setItem('jagan_dashboard', JSON.stringify(state));
+}
+
+/* ══════════════════════
+   AUTH
+══════════════════════ */
+function tryLogin() {
+  const pw = document.getElementById('pw-input').value;
+  loadState();
+  if (pw === state.password) {
+    document.getElementById('lock').style.display = 'none';
+    document.getElementById('app').style.display  = 'block';
+    initApp();
+  } else {
+    const err = document.getElementById('lock-error');
+    err.textContent = 'Incorrect password.';
+    const box = document.querySelector('.lock-box');
+    box.classList.remove('shake');
+    void box.offsetWidth;
+    box.classList.add('shake');
+    document.getElementById('pw-input').value = '';
+  }
+}
+
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') tryLogin();
+});
+
+function lockOut() {
+  saveState();
+  document.getElementById('app').style.display  = 'none';
+  document.getElementById('lock').style.display = 'flex';
+  document.getElementById('pw-input').value = '';
+  document.getElementById('lock-error').textContent = '';
+  toast('Locked successfully.', 'success');
+}
+
+function changePassword() {
+  const cur     = document.getElementById('s-cur-pw').value;
+  const nw      = document.getElementById('s-new-pw').value;
+  const confirm = document.getElementById('s-confirm-pw').value;
+
+  if (cur !== state.password) { toast('Current password is wrong.', 'error'); return; }
+  if (nw.length < 6)          { toast('New password must be at least 6 chars.', 'error'); return; }
+  if (nw !== confirm)         { toast('Passwords do not match.', 'error'); return; }
+
+  state.password = nw;
+  saveState();
+  document.getElementById('s-cur-pw').value = '';
+  document.getElementById('s-new-pw').value = '';
+  document.getElementById('s-confirm-pw').value = '';
+  toast('Password updated!', 'success');
+  log('Password changed.');
+}
+
+/* ══════════════════════
+   INIT
+══════════════════════ */
+function initApp() {
+  renderStats();
+  renderHero();
+  renderProjects();
+  renderLab();
+  renderQuick();
+  renderSettings();
+}
+
+/* ══════════════════════
+   PANELS
+══════════════════════ */
+function switchPanel(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  const id = el.dataset.panel;
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.getElementById('panel-name').textContent = '/ ' + el.textContent.trim();
+}
+
+/* ══════════════════════
+   STATS
+══════════════════════ */
+function renderStats() {
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Projects</div><div class="stat-value">${state.projects.length}</div><div class="stat-sub">visible cards</div></div>
+    <div class="stat-card"><div class="stat-label">Lab Cards</div><div class="stat-value">${state.lab.length}</div><div class="stat-sub">experiments</div></div>
+    <div class="stat-card"><div class="stat-label">Quick Links</div><div class="stat-value">${state.quick.length}</div><div class="stat-sub">shortcuts</div></div>
+    <div class="stat-card"><div class="stat-label">Live Links</div><div class="stat-value">${[...state.projects, ...state.quick].filter(x => x.link).length}</div><div class="stat-sub">with URLs</div></div>
+  `;
+}
+
+/* ══════════════════════
+   HERO
+══════════════════════ */
+function renderHero() {
+  const h  = state.hero;
+  const el = document.getElementById('hero-fields');
+  el.innerHTML = `
+    <div class="item-row hero-row">
+      <div class="field-wrap">
+        <div class="field-label">Tag Line</div>
+        <input class="field-input" id="h-tag" value="${esc(h.tag)}" placeholder="Live from orbit">
+      </div>
+      <div class="field-wrap">
+        <div class="field-label">Title</div>
+        <input class="field-input" id="h-title" value="${esc(h.title)}" placeholder="Jagan Sharma">
+      </div>
+    </div>
+    <div class="item-row hero-row">
+      <div class="field-wrap">
+        <div class="field-label">Title Accent (gradient line)</div>
+        <input class="field-input" id="h-accent" value="${esc(h.titleAccent)}" placeholder="Coding Hub">
+      </div>
+    </div>
+    <div class="item-row hero-row wide">
+      <div class="field-wrap">
+        <div class="field-label">Subtitle</div>
+        <textarea class="field-textarea" id="h-sub" rows="2">${esc(h.subtitle)}</textarea>
+      </div>
+    </div>
+  `;
+}
+
+/* ══════════════════════
+   PROJECTS
+══════════════════════ */
+function renderProjects() {
+  const list = document.getElementById('project-list');
+  list.innerHTML = '';
+  state.projects.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'item-row project-row';
+    row.draggable = true;
+    row.dataset.index = i;
+    row.innerHTML = `
+      <div class="field-wrap">
+        <div class="field-label">Icon</div>
+        <input class="emoji-input" value="${esc(p.icon)}" oninput="updateProject(${i},'icon',this.value)">
+      </div>
+      <div class="field-wrap">
+        <div class="field-label">Title</div>
+        <input class="field-input" value="${esc(p.title)}" oninput="updateProject(${i},'title',this.value)">
+      </div>
+      <div class="field-wrap">
+        <div class="field-label">Description</div>
+        <textarea class="field-textarea" rows="2" oninput="updateProject(${i},'desc',this.value)">${esc(p.desc)}</textarea>
+      </div>
+      <div class="field-wrap">
+        <div class="field-label">Link (optional)</div>
+        <input class="field-input" value="${esc(p.link)}" placeholder="https://... or relative" oninput="updateProject(${i},'link',this.value)">
+      </div>
+      <div class="row-actions">
+        <span class="drag-handle" title="Drag to reorder">⠿</span>
+        <button class="del-btn" onclick="deleteProject(${i})" title="Delete">✕</button>
+      </div>
+    `;
+    addDragHandlers(row, 'projects');
+    list.appendChild(row);
+  });
+}
+
+function addProject() {
+  state.projects.push({ icon: '📦', title: 'New Project', desc: 'Description here.', link: '' });
+  renderProjects(); renderStats(); log('Added project card.');
+}
+
+function deleteProject(i) {
+  state.projects.splice(i, 1);
+  renderProjects(); renderStats(); log('Deleted project card.');
+}
+
+function updateProject(i, key, val) {
+  state.projects[i][key] = val;
+}
+
+/* ══════════════════════
+   LAB
+══════════════════════ */
+function renderLab() {
+  const list = document.getElementById('lab-list');
+  list.innerHTML = '';
+  state.lab.forEach((l, i) => {
+    const row = document.createElement('div');
+    row.className = 'item-row lab-row';
+    row.draggable = true;
+    row.dataset.index = i;
+    row.innerHTML = `
+      <div class="field-wrap">
+        <div class="field-label">Icon</div>
+        <input class="emoji-input" value="${esc(l.icon)}" oninput="updateLab(${i},'icon',this.value)">
+      </div>
+      <div class="field-wrap">
+        <div class="field-label">Title</div>
+        <input class="field-input" value="${esc(l.title)}" oninput="updateLab(${i},'title',this.value)">
+      </div>
+      <div class="field-wrap">
+        <div class="field-label">Description</div>
+        <textarea class="field-textarea" rows="2" oninput="updateLab(${i},'desc',this.value)">${esc(l.desc)}</textarea>
+      </div>
+      <div class="row-actions">
+        <span class="drag-handle" title="Drag to reorder">⠿</span>
+        <button class="del-btn" onclick="deleteLab(${i})" title="Delete">✕</button>
+      </div>
+    `;
+    addDragHandlers(row, 'lab');
+    list.appendChild(row);
+  });
+}
+
+function addLab() {
+  state.lab.push({ icon: '🧪', title: 'New Experiment', desc: 'Description here.' });
+  renderLab(); renderStats(); log('Added lab card.');
+}
+
+function deleteLab(i) {
+  state.lab.splice(i, 1);
+  renderLab(); renderStats(); log('Deleted lab card.');
+}
+
+function updateLab(i, key, val) { state.lab[i][key] = val; }
+
+/* ══════════════════════
+   QUICK
+══════════════════════ */
+function renderQuick() {
+  const list = document.getElementById('quick-list');
+  list.innerHTML = '';
+  state.quick.forEach((q, i) => {
+    const row = document.createElement('div');
+    row.className = 'item-row quick-row';
+    row.draggable = true;
+    row.dataset.index = i;
+    row.innerHTML = `
+      <div class="field-wrap">
+        <div class="field-label">Icon</div>
+        <input class="emoji-input" value="${esc(q.icon)}" oninput="updateQuick(${i},'icon',this.value)">
+      </div>
+      <div class="field-wrap">
+        <div class="field-label">Label</div>
+        <input class="field-input" value="${esc(q.label)}" oninput="updateQuick(${i},'label',this.value)">
+      </div>
+      <div class="field-wrap">
+        <div class="field-label">Sublabel</div>
+        <input class="field-input" value="${esc(q.sub)}" oninput="updateQuick(${i},'sub',this.value)">
+      </div>
+      <div class="row-actions">
+        <span class="drag-handle" title="Drag to reorder">⠿</span>
+        <button class="del-btn" onclick="deleteQuick(${i})" title="Delete">✕</button>
+      </div>
+    `;
+    addDragHandlers(row, 'quick');
+    list.appendChild(row);
+  });
+}
+
+function addQuick() {
+  state.quick.push({ icon: '🔗', label: 'New Link', sub: 'Description', link: '' });
+  renderQuick(); renderStats(); log('Added quick access item.');
+}
+
+function deleteQuick(i) {
+  state.quick.splice(i, 1);
+  renderQuick(); renderStats(); log('Deleted quick item.');
+}
+
+function updateQuick(i, key, val) { state.quick[i][key] = val; }
+
+/* ══════════════════════
+   SETTINGS
+══════════════════════ */
+function renderSettings() {
+  document.getElementById('s-title').value = state.meta.pageTitle;
+  document.getElementById('s-email').value = state.meta.email;
+}
+
+function saveMeta() {
+  state.meta.pageTitle = document.getElementById('s-title').value;
+  state.meta.email     = document.getElementById('s-email').value;
+  saveState();
+  toast('Site meta saved!', 'success');
+  log('Updated site meta.');
+}
+
+/* ══════════════════════
+   COLLECT FROM DOM
+══════════════════════ */
+function collectFromDOM() {
+  // hero
+  const htag   = document.getElementById('h-tag');
+  const htitle = document.getElementById('h-title');
+  const hacc   = document.getElementById('h-accent');
+  const hsub   = document.getElementById('h-sub');
+  if (htag)   state.hero.tag         = htag.value;
+  if (htitle) state.hero.title       = htitle.value;
+  if (hacc)   state.hero.titleAccent = hacc.value;
+  if (hsub)   state.hero.subtitle    = hsub.value;
+}
+
+/* ══════════════════════
+   SAVE ALL
+══════════════════════ */
+function saveAll() {
+  saveState();
+  renderStats();
+  toast('All changes saved!', 'success');
+  log('Manual save.');
+}
+
+function resetAll() {
+  if (!confirm('Reset all content to defaults? This cannot be undone.')) return;
+  const pw = state.password;
+  state = JSON.parse(JSON.stringify(DEFAULTS));
+  state.password = pw;
+  localStorage.setItem('jagan_dashboard', JSON.stringify(state));
+  initApp();
+  toast('Content reset to defaults.', 'success');
+  log('Reset all content.');
+}
+
+/* ══════════════════════
+   EXPORT HTML
+══════════════════════ */
+function exportHTML() {
+  collectFromDOM();
+  const s = state;
+  const h = s.hero;
+  const m = s.meta;
+
+  const projectCards = s.projects.map(p => `
+      <div class="project-card"${p.link ? ` onclick="location.href='${p.link}'" style="cursor:pointer"` : ''}>
+        <div class="card-icon">${p.icon}</div>
+        <div class="card-title">${p.title}</div>
+        <p class="card-desc">${p.desc}</p>
+        <span class="card-arrow">&#8599;</span>
+      </div>`).join('\n');
+
+  const labCards = s.lab.map(l => `
+      <div class="lab-card">
+        <div class="lab-icon">${l.icon}</div>
+        <div class="lab-text">
+          <div class="card-title">${l.title}</div>
+          <p class="card-desc">${l.desc}</p>
+        </div>
+      </div>`).join('\n');
+
+  const quickCards = s.quick.map(q => `
+      <div class="quick-card"${q.link ? ` onclick="location.href='${q.link}'"` : ''}>
+        <div class="quick-icon">${q.icon}</div>
+        <div>
+          <div class="quick-label">${q.label}</div>
+          <div class="quick-sub">${q.sub}</div>
+        </div>
+      </div>`).join('\n');
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${m.pageTitle}</title>
+<style>
+  :root {
+    --bg-deep:       #050810;
+    --bg-mid:        #080d1a;
+    --bg-card:       #0c1225;
+    --bg-card-hover: #111a35;
+    --accent:        #4f8ef7;
+    --accent-2:      #7c5cfc;
+    --accent-glow:   rgba(79,142,247,0.18);
+    --accent-2-glow: rgba(124,92,252,0.15);
+    --text-primary:  #e8edf5;
+    --text-muted:    #6b7a99;
+    --text-dim:      #3a4560;
+    --border:        rgba(79,142,247,0.12);
+    --border-hover:  rgba(79,142,247,0.32);
+    --radius-sm:     8px;
+    --radius-md:     14px;
+    --radius-lg:     20px;
+    --font-display:  'Courier New', 'Lucida Console', monospace;
+    --font-body:     Georgia, 'Times New Roman', serif;
+    --transition:    0.28s cubic-bezier(0.4,0,0.2,1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg-deep); color: var(--text-primary); font-family: var(--font-body); font-size: 16px; line-height: 1.65; overflow-x: hidden; }
+  #star-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse 80% 60% at 20% 10%, rgba(79,142,247,0.07) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(124,92,252,0.07) 0%, transparent 60%), linear-gradient(180deg, #050810 0%, #060b16 40%, #070c18 100%); z-index: 0; pointer-events: none; }
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
+  section { position: relative; z-index: 2; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0 28px; height: 64px; display: flex; align-items: center; justify-content: space-between; background: rgba(5,8,16,0.75); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-bottom: 1px solid var(--border); transition: background var(--transition); }
+  nav.scrolled { background: rgba(5,8,16,0.92); border-bottom-color: rgba(79,142,247,0.2); }
+  .nav-logo { font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: 0.04em; color: var(--text-primary); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .nav-logo::before { content: '>'; color: var(--accent); font-size: 13px; }
+  .nav-contact { font-family: var(--font-display); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); text-decoration: none; border: 1px solid rgba(79,142,247,0.35); padding: 6px 16px; border-radius: var(--radius-sm); transition: all var(--transition); }
+  .nav-contact:hover { background: rgba(79,142,247,0.12); border-color: var(--accent); color: #fff; }
+  #hero { min-height: 100vh; display: flex; align-items: center; padding-top: 64px; overflow: hidden; }
+  .hero-inner { display: block; width: 100%; max-width: 600px; }
+  .hero-text { padding: 60px 0; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-display); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(79,142,247,0.3); background: rgba(79,142,247,0.07); padding: 5px 14px; border-radius: 99px; margin-bottom: 24px; }
+  .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite; }
+  .hero-title { font-family: var(--font-display); font-size: clamp(32px, 4.5vw, 58px); font-weight: 700; line-height: 1.12; letter-spacing: -0.02em; margin-bottom: 20px; color: var(--text-primary); }
+  .hero-title .line-accent { background: linear-gradient(90deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-subtitle { font-size: 17px; color: var(--text-muted); max-width: 420px; margin-bottom: 40px; line-height: 1.75; font-style: italic; }
+  .moon { background: linear-gradient(90deg, #d0d0d0 48%, #919191 100%); position: fixed; top: -100px; right: -300px; width: 900px; height: 900px; border-radius: 100%; box-shadow: 0 0 30px -4px rgba(0,0,0,.5); pointer-events: none; z-index: 1; transition: transform .2s; }
+  .moon__crater { position: absolute; border-radius: 100%; background: linear-gradient(90deg, #7a7a7a 38%, #c3c3c3 100%); opacity: .6; }
+  .moon__crater1 { top: 250px; left: 500px; width: 60px; height: 180px; }
+  .moon__crater2 { top: 650px; left: 340px; width: 40px; height: 80px; transform: rotate(55deg); }
+  .moon__crater3 { top: -20px; left: 40px; width: 65px; height: 120px; transform: rotate(250deg); }
+  .astronaut-wrap { position: fixed; top: 50%; right: 14%; transform: translate(50%, -50%); z-index: 3; pointer-events: none; }
+  @keyframes floatAstronaut { 0% { transform: translate(-50%,-50%) rotate(18deg); } 50% { transform: translate(-50%,-55%) rotate(22deg); } 100% { transform: translate(-50%,-50%) rotate(18deg); } }
+  .astronaut { position: absolute; width: 185px; height: 300px; left: 70%; top: 50%; transform: translate(-50%,-50%) rotate(20deg) scale(1.2); animation: floatAstronaut 6s ease-in-out infinite; transition: transform .1s; }
+  .astronaut__head { background: white; position: absolute; top: 60px; left: 60px; width: 60px; height: 60px; border-radius: 2em; }
+  .astronaut__head-visor-flare1 { background: #7f8fa6; position: absolute; top: 28px; left: 40px; width: 10px; height: 10px; border-radius: 2em; opacity: .5; }
+  .astronaut__head-visor-flare2 { background: #718093; position: absolute; top: 40px; left: 38px; width: 5px; height: 5px; border-radius: 2em; opacity: .3; }
+  .astronaut__backpack { background: #bfbfbf; position: absolute; top: 90px; left: 47px; width: 86px; height: 90px; border-radius: 8px; }
+  .astronaut__body { background: #e6e6e6; position: absolute; top: 115px; left: 55px; width: 70px; height: 80px; border-radius: 8px; }
+  .astronaut__body__chest { background: #d9d9d9; position: absolute; top: 140px; left: 68px; width: 45px; height: 25px; border-radius: 6px; }
+  .astronaut__arm-left1 { background: #e6e6e6; position: absolute; top: 127px; left: 9px; width: 65px; height: 20px; border-radius: 8px; transform: rotate(-30deg); }
+  .astronaut__arm-left2 { background: #e6e6e6; position: absolute; top: 102px; left: 7px; width: 20px; height: 45px; border-radius: 8px; transform: rotate(-12deg); border-top-left-radius: 8em; border-top-right-radius: 8em; }
+  .astronaut__arm-right1 { background: #e6e6e6; position: absolute; top: 113px; left: 100px; width: 65px; height: 20px; border-radius: 8px; transform: rotate(-10deg); }
+  .astronaut__arm-right2 { background: #e6e6e6; position: absolute; top: 78px; left: 141px; width: 20px; height: 45px; border-radius: 8px; transform: rotate(-10deg); border-top-left-radius: 8em; border-top-right-radius: 8em; }
+  .astronaut__arm-thumb-left { background: #e6e6e6; position: absolute; top: 110px; left: 21px; width: 10px; height: 6px; border-radius: 8em; transform: rotate(-35deg); }
+  .astronaut__arm-thumb-right { background: #e6e6e6; position: absolute; top: 90px; left: 133px; width: 10px; height: 6px; border-radius: 8em; transform: rotate(20deg); }
+  .astronaut__wrist-left { background: #e67e22; position: absolute; top: 122px; left: 6.5px; width: 21px; height: 4px; border-radius: 8em; transform: rotate(-15deg); }
+  .astronaut__wrist-right { background: #e67e22; position: absolute; top: 98px; left: 141px; width: 21px; height: 4px; border-radius: 8em; transform: rotate(-10deg); }
+  .astronaut__leg-left { background: #e6e6e6; position: absolute; top: 188px; left: 50px; width: 23px; height: 75px; transform: rotate(10deg); }
+  .astronaut__leg-right { background: #e6e6e6; position: absolute; top: 188px; left: 108px; width: 23px; height: 75px; transform: rotate(-10deg); }
+  .astronaut__foot-left { background: white; position: absolute; top: 240px; left: 43px; width: 28px; height: 20px; transform: rotate(10deg); border-radius: 3px; border-top-left-radius: 8em; border-top-right-radius: 8em; border-bottom: 4px solid #e67e22; }
+  .astronaut__foot-right { background: white; position: absolute; top: 240px; left: 111px; width: 28px; height: 20px; transform: rotate(-10deg); border-radius: 3px; border-top-left-radius: 8em; border-top-right-radius: 8em; border-bottom: 4px solid #e67e22; }
+  .section-header { text-align: center; margin-bottom: 56px; }
+  .section-tag { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; display: block; }
+  .section-title { font-family: var(--font-display); font-size: clamp(24px, 3vw, 36px); font-weight: 700; letter-spacing: -0.02em; color: var(--text-primary); margin-bottom: 12px; }
+  .section-desc { font-size: 15px; color: var(--text-muted); max-width: 500px; margin: 0 auto; font-style: italic; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .card-grid-3 { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .project-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 28px; position: relative; overflow: hidden; transition: all var(--transition); cursor: pointer; }
+  .project-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--accent-glow), var(--accent-2-glow)); opacity: 0; transition: opacity var(--transition); border-radius: inherit; }
+  .project-card:hover { border-color: var(--border-hover); transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(79,142,247,0.15); }
+  .project-card:hover::before { opacity: 1; }
+  .card-icon { width: 44px; height: 44px; border-radius: var(--radius-sm); background: linear-gradient(135deg, rgba(79,142,247,0.15), rgba(124,92,252,0.1)); border: 1px solid rgba(79,142,247,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; font-size: 20px; position: relative; z-index: 1; }
+  .card-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: 0.02em; color: var(--text-primary); margin-bottom: 8px; position: relative; z-index: 1; }
+  .card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; position: relative; z-index: 1; }
+  .card-arrow { position: absolute; bottom: 22px; right: 22px; font-family: var(--font-display); font-size: 16px; color: var(--accent); opacity: 0; transform: translate(-4px, 4px); transition: all var(--transition); z-index: 1; }
+  .project-card:hover .card-arrow { opacity: 1; transform: translate(0, 0); }
+  .lab-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; display: flex; align-items: flex-start; gap: 18px; transition: all var(--transition); position: relative; overflow: hidden; }
+  .lab-card::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--accent), var(--accent-2)); opacity: 0; transition: opacity var(--transition); border-radius: 0 2px 2px 0; }
+  .lab-card:hover { border-color: var(--border-hover); transform: translateX(4px); background: var(--bg-card-hover); }
+  .lab-card:hover::after { opacity: 1; }
+  .lab-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.18); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .lab-text .card-title { margin-bottom: 4px; font-size: 14px; }
+  .lab-text .card-desc { font-size: 12px; }
+  #quick-access { padding: 80px 0; }
+  .quick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+  .quick-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px 22px; display: flex; align-items: center; gap: 14px; transition: all var(--transition); cursor: pointer; }
+  .quick-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-2px); }
+  .quick-icon { font-size: 20px; width: 36px; text-align: center; flex-shrink: 0; }
+  .quick-label { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: 0.05em; color: var(--text-primary); }
+  .quick-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  #projects { padding: 100px 0; }
+  #dev-lab { padding: 80px 0; background: rgba(8,13,26,0.6); }
+  .section-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 0 28px; position: relative; z-index: 2; }
+  footer { position: relative; z-index: 2; border-top: 1px solid var(--border); padding: 40px 28px; }
+  .footer-inner { max-width: 1140px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .footer-logo { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.04em; }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy { font-size: 12px; color: var(--text-dim); font-family: var(--font-display); letter-spacing: 0.04em; }
+  .footer-contact { font-family: var(--font-display); font-size: 12px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.04em; transition: color var(--transition); }
+  .footer-contact:hover { color: var(--accent); }
+  @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 33% { transform: translateY(-18px) rotate(2deg); } 66% { transform: translateY(-8px) rotate(-2deg); } }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+  @keyframes hero-fade-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-tag { animation: hero-fade-up 0.7s ease both 0.1s; }
+  .hero-title { animation: hero-fade-up 0.7s ease both 0.25s; }
+  .hero-subtitle { animation: hero-fade-up 0.7s ease both 0.4s; }
+  .astronaut-wrap { animation: hero-fade-up 0.9s ease both 0.2s, float 6s ease-in-out 1s infinite; }
+  @media (max-width: 820px) { .astronaut-wrap { right: 10px; top: 80px; } .moon { width: 360px; height: 360px; top: -120px; right: -120px; } }
+  @media (max-width: 560px) { .card-grid { grid-template-columns: 1fr; } .quick-grid { grid-template-columns: 1fr 1fr; } nav { padding: 0 18px; } .container { padding: 0 18px; } #projects, #dev-lab { padding: 60px 0; } .section-header { margin-bottom: 36px; } }
+</style>
+</head>
+<body>
+<canvas id="star-canvas"></canvas>
+<nav id="navbar">
+  <a href="#" class="nav-logo">Jagan Sharma</a>
+  <a href="mailto:${m.email}" class="nav-contact">Contact</a>
+</nav>
+<div class="moon">
+  <div class="moon__crater moon__crater1"></div>
+  <div class="moon__crater moon__crater2"></div>
+  <div class="moon__crater moon__crater3"></div>
+</div>
+<div class="astronaut-wrap">
+  <div class="astronaut">
+    <div class="astronaut__backpack"></div>
+    <div class="astronaut__body"></div>
+    <div class="astronaut__body__chest"></div>
+    <div class="astronaut__arm-left1"></div>
+    <div class="astronaut__arm-left2"></div>
+    <div class="astronaut__arm-right1"></div>
+    <div class="astronaut__arm-right2"></div>
+    <div class="astronaut__arm-thumb-left"></div>
+    <div class="astronaut__arm-thumb-right"></div>
+    <div class="astronaut__wrist-left"></div>
+    <div class="astronaut__wrist-right"></div>
+    <div class="astronaut__leg-left"></div>
+    <div class="astronaut__leg-right"></div>
+    <div class="astronaut__foot-left"></div>
+    <div class="astronaut__foot-right"></div>
+    <div class="astronaut__cord"><canvas id="cord" height="500" width="500"></canvas></div>
+    <div class="astronaut__head">
+      <canvas id="visor" width="60" height="60"></canvas>
+      <div class="astronaut__head-visor-flare1"></div>
+      <div class="astronaut__head-visor-flare2"></div>
+    </div>
+  </div>
+</div>
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-tag">${h.tag}</div>
+        <h1 class="hero-title">${h.title}<br><span class="line-accent">${h.titleAccent}</span></h1>
+        <p class="hero-subtitle">${h.subtitle}</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"></div>
+<section id="projects">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">// missions</span>
+      <h2 class="section-title">Projects</h2>
+      <p class="section-desc">Things built, shipped, and left running.</p>
+    </div>
+    <div class="card-grid">${projectCards}
+    </div>
+  </div>
+</section>
+<div class="section-divider"></div>
+<section id="dev-lab">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">// laboratory</span>
+      <h2 class="section-title">Dev Lab</h2>
+      <p class="section-desc">Where ideas get stress-tested before becoming projects.</p>
+    </div>
+    <div class="card-grid card-grid-3">${labCards}
+    </div>
+  </div>
+</section>
+<div class="section-divider"></div>
+<section id="quick-access">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">// shortcuts</span>
+      <h2 class="section-title">Quick Access</h2>
+      <p class="section-desc">Developer utilities, one click away.</p>
+    </div>
+    <div class="quick-grid">${quickCards}
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">&gt; <span>jagansharma.com</span></div>
+    <div class="footer-copy">&copy; jagansharma.com</div>
+    <a href="mailto:${m.email}" class="footer-contact">${m.email}</a>
+  </div>
+  <div style="text-align:center; padding: 12px 0 4px; font-family: var(--font-display); font-size: 11px; letter-spacing: 0.1em; color: var(--text-dim);">Made with Claude</div>
+</footer>
+<script>
+(function(){const canvas=document.getElementById('star-canvas');const ctx=canvas.getContext('2d');let stars=[];let W,H;function makeStar(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.3,alpha:Math.random(),speed:Math.random()*0.004+0.001,phase:Math.random()*Math.PI*2,hue:Math.random()<0.15?(Math.random()<0.5?210:260):null}}function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;stars=Array.from({length:280},makeStar)}function draw(time){ctx.clearRect(0,0,W,H);for(const s of stars){const flicker=(Math.sin(time*s.speed*1000+s.phase)+1)/2;const alpha=0.2+flicker*0.8*s.alpha;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=s.hue!==null?\`hsla(\${s.hue},80%,80%,\${alpha})\`:\`rgba(255,255,255,\${alpha})\`;ctx.fill()}requestAnimationFrame(draw)}window.addEventListener('resize',resize);resize();requestAnimationFrame(draw)}());
+(function(){const nav=document.getElementById('navbar');window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>20)},{passive:true})}());
+(function(){const items=document.querySelectorAll('.project-card,.lab-card,.quick-card,.section-header');items.forEach(function(el){el.style.opacity='0';el.style.transform='translateY(24px)';el.style.transition='opacity 0.55s ease, transform 0.55s ease'});const observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.style.opacity='1';entry.target.style.transform='none';observer.unobserve(entry.target)}})},{threshold:0.12});items.forEach(function(el){observer.observe(el)})}());
+function drawVisor(){const canvas=document.getElementById('visor');if(!canvas)return;const ctx=canvas.getContext('2d');ctx.beginPath();ctx.moveTo(5,45);ctx.bezierCurveTo(15,64,45,64,55,45);ctx.lineTo(55,20);ctx.bezierCurveTo(55,15,50,10,45,10);ctx.lineTo(15,10);ctx.bezierCurveTo(15,10,5,10,5,20);ctx.lineTo(5,45);ctx.fillStyle='#2f3640';ctx.strokeStyle='#f5f6fa';ctx.fill();ctx.stroke()}
+(function(){const cordCanvas=document.getElementById('cord');if(!cordCanvas)return;const ctx=cordCanvas.getContext('2d');let y1=160,y2=100,y3=100;let y1Forward=true,y2Forward=false,y3Forward=true;function animateCord(){requestAnimationFrame(animateCord);ctx.clearRect(0,0,500,500);ctx.beginPath();ctx.moveTo(130,170);ctx.bezierCurveTo(250,y1,345,y2,400,y3);ctx.strokeStyle='white';ctx.lineWidth=8;ctx.stroke();if(y1===100)y1Forward=true;if(y1===300)y1Forward=false;if(y2===100)y2Forward=true;if(y2===310)y2Forward=false;if(y3===100)y3Forward=true;if(y3===317)y3Forward=false;y1Forward?y1++:y1--;y2Forward?y2++:y2--;y3Forward?y3++:y3--}animateCord()}());
+document.addEventListener('mousemove',function(e){const x=(e.clientX/window.innerWidth)-0.5;const y=(e.clientY/window.innerHeight)-0.5;const astronaut=document.querySelector('.astronaut');if(astronaut){astronaut.style.transform=\`translate(calc(-50% + \${x*40}px), calc(-50% + \${y*40}px)) rotate(20deg) scale(1.2)\`}const moon=document.querySelector('.moon');if(moon){moon.style.transform=\`translate(\${x*30}px, \${y*30}px)\`}});
+drawVisor();
+<\/script>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = 'index.html';
+  a.click();
+  toast('index.html exported!', 'success');
+  log('Exported index.html');
+}
+
+/* ══════════════════════
+   DRAG & DROP REORDER
+══════════════════════ */
+function addDragHandlers(row, type) {
+  row.addEventListener('dragstart', e => {
+    dragSrc = { type, index: parseInt(row.dataset.index) };
+    e.dataTransfer.effectAllowed = 'move';
+    row.style.opacity = '0.4';
+  });
+  row.addEventListener('dragend', () => { row.style.opacity = '1'; });
+  row.addEventListener('dragover', e => {
+    e.preventDefault();
+    row.classList.add('drag-over');
+  });
+  row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+  row.addEventListener('drop', e => {
+    e.preventDefault();
+    row.classList.remove('drag-over');
+    if (!dragSrc || dragSrc.type !== type) return;
+    const toIndex = parseInt(row.dataset.index);
+    if (dragSrc.index === toIndex) return;
+    const arr = state[type];
+    const moved = arr.splice(dragSrc.index, 1)[0];
+    arr.splice(toIndex, 0, moved);
+    if (type === 'projects') renderProjects();
+    if (type === 'lab')      renderLab();
+    if (type === 'quick')    renderQuick();
+    log(`Reordered ${type} cards.`);
+  });
+}
+
+/* ══════════════════════
+   ACTIVITY LOG
+══════════════════════ */
+function log(msg) {
+  const now = new Date().toLocaleTimeString('en-US', { hour12: false });
+  activityLog.unshift(`<span style="color:var(--accent)">${now}</span> — ${msg}`);
+  if (activityLog.length > 12) activityLog.pop();
+  document.getElementById('activity-log').innerHTML = activityLog.join('<br>');
+}
+
+/* ══════════════════════
+   TOAST
+══════════════════════ */
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = 'toast ' + type;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* ══════════════════════
+   UTIL
+══════════════════════ */
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+</script>
+</body>
+</html>
