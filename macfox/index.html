@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Tech Pro — Jagan Sharma</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+:root{
+  --bg:#08080e;--bg2:#111118;--bg3:#1c1c26;
+  --g:rgba(255,255,255,0.055);--g2:rgba(255,255,255,0.09);--g3:rgba(255,255,255,0.13);
+  --b:rgba(255,255,255,0.08);--b2:rgba(255,255,255,0.16);--b3:rgba(255,255,255,0.26);
+  --t:#f2f2f7;--t2:#98989f;--t3:#48484f;
+  --blue:#2997ff;--bl2:rgba(41,151,255,0.14);--bl3:rgba(41,151,255,0.07);
+  --green:#32d74b;--gr2:rgba(50,215,75,0.13);
+  --amber:#ffd60a;--am2:rgba(255,214,10,0.12);
+  --red:#ff453a;--rd2:rgba(255,69,58,0.13);
+  --purple:#bf5af2;--pu2:rgba(191,90,242,0.13);
+  --pink:#ff375f;--pk2:rgba(255,55,95,0.12);
+  --teal:#5ac8fa;--te2:rgba(90,200,250,0.12);
+  --r:13px;--r2:9px;--r3:18px;
+  --ff:'Inter',-apple-system,sans-serif
+}
+html,body{font-family:var(--ff);background:var(--bg);color:var(--t);min-height:100vh}
+
+.app{background:var(--bg);max-width:680px;margin:0 auto;min-height:100vh}
+
+.topbar{background:rgba(8,8,14,0.82);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);border-bottom:0.5px solid var(--b);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300}
+.tb-l{display:flex;align-items:center;gap:9px}
+.apl{width:14px;height:18px;fill:var(--t)}
+.app-n{font-size:13px;font-weight:600;letter-spacing:-.3px}
+.app-s{font-size:10px;color:var(--t2);margin-top:1px}
+.live{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.sbadge{background:var(--gr2);border:0.5px solid rgba(50,215,75,0.28);color:var(--green);font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;display:flex;align-items:center;gap:2px}
+
+.hero{background:linear-gradient(145deg,rgba(41,151,255,0.07) 0%,rgba(8,8,14,0) 55%);border-bottom:0.5px solid var(--b);padding:20px 18px 18px}
+.h-label{font-size:10px;font-weight:500;color:var(--t2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px}
+.h-title{font-size:24px;font-weight:700;letter-spacing:-.6px;margin-bottom:14px;line-height:1.1}
+.h-grad{background:linear-gradient(90deg,#2997ff,#32d74b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+.ring-row{display:flex;align-items:center;gap:16px;margin-bottom:13px}
+.ring-wrap{position:relative;width:72px;height:72px;flex-shrink:0}
+.ring-wrap svg{transform:rotate(-90deg)}
+.rbg{fill:none;stroke:rgba(255,255,255,0.07);stroke-width:6}
+.rfill{fill:none;stroke:url(#grad1);stroke-width:6;stroke-linecap:round;stroke-dasharray:207;stroke-dashoffset:207;transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)}
+.rpct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;letter-spacing:-.4px}
+.bnum{font-size:28px;font-weight:700;letter-spacing:-.9px;line-height:1;margin-bottom:3px}
+.bsub{font-size:12px;color:var(--t2)}
+
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:13px}
+.chip{background:var(--g);border:0.5px solid var(--b);border-radius:var(--r2);padding:8px 9px;text-align:center;backdrop-filter:blur(20px)}
+.chip-v{font-size:15px;font-weight:700;letter-spacing:-.3px;margin-bottom:2px}
+.chip-l{font-size:9px;color:var(--t2);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+
+.motive{background:var(--g);border:0.5px solid var(--b2);border-radius:var(--r);padding:12px 14px;cursor:pointer;backdrop-filter:blur(30px);transition:border-color .2s}
+.motive:active{border-color:var(--b3)}
+.m-eye{font-size:9px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}
+.m-body{font-size:12px;color:var(--t);line-height:1.6}
+.m-tap{font-size:9px;color:var(--t3);margin-top:5px;text-align:right}
+
+.nav{background:rgba(8,8,14,0.8);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-bottom:0.5px solid var(--b);padding:0 14px;display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;position:sticky;top:53px;z-index:200}
+.nav::-webkit-scrollbar{display:none}
+.nt{font-size:11px;font-weight:500;padding:11px 13px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s;flex-shrink:0;letter-spacing:-.1px}
+.nt.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+
+.panels{padding:16px}
+.panel{display:none;animation:fu .2s ease}
+.panel.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+.sec{font-size:9px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.09em;margin:0 0 9px}
+.sec-gap{margin-top:16px}
+
+.glist{background:var(--g);border:0.5px solid var(--b);border-radius:var(--r);overflow:hidden;backdrop-filter:blur(20px)}
+.grow{display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:0.5px solid var(--b);transition:background .1s}
+.grow:last-child{border-bottom:none}
+.grow:active{background:var(--g2)}
+.gi{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.ginfo{flex:1;min-width:0}
+.gname{font-size:12px;font-weight:500;letter-spacing:-.2px;margin-bottom:2px}
+.gdesc{font-size:10px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gr{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.ptag{font-size:14px;font-weight:700;color:var(--blue);letter-spacing:-.3px}
+
+.btn-p{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:600;cursor:pointer;font-family:var(--ff);transition:all .1s;white-space:nowrap}
+.btn-p:active{transform:scale(.93)}
+.btn-s{background:none;border:none;color:var(--blue);font-size:10px;font-weight:500;cursor:pointer;font-family:var(--ff);padding:0}
+.sbadge2{background:var(--gr2);border:0.5px solid rgba(50,215,75,.22);color:var(--green);font-size:9px;font-weight:700;border-radius:10px;padding:2px 6px}
+
+.gcard{background:var(--g);border:0.5px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:9px;backdrop-filter:blur(20px)}
+.gh{display:flex;align-items:center;padding:12px 13px;cursor:pointer;gap:9px;transition:background .1s}
+.gh:active{background:var(--g2)}
+.ghi{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ghm{flex:1}
+.ght{font-size:12px;font-weight:500;letter-spacing:-.2px}
+.ghp{font-size:11px;color:var(--blue);font-weight:600;margin-top:1px}
+.ghc{font-size:10px;color:var(--t3);transition:transform .2s}
+.ghc.open{transform:rotate(180deg)}
+.gbody{display:none;border-top:0.5px solid var(--b);padding:13px}
+.gbody.open{display:block}
+.step{display:flex;gap:10px;margin-bottom:11px}
+.sn{width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.st{font-size:11px;font-weight:600;margin-bottom:2px}
+.sb2{font-size:11px;color:var(--t2);line-height:1.55}
+.ibox{background:rgba(255,255,255,0.04);border-radius:7px;padding:8px 10px;font-size:10px;color:var(--t2);line-height:1.5;margin-top:5px}
+.ibox b{color:var(--t);font-weight:600}
+.tbox{border-left:2px solid var(--blue);padding:7px 10px;font-size:10px;color:var(--t2);line-height:1.55;margin-top:5px;background:var(--bl3);border-radius:0 6px 6px 0}
+.tbox b{color:var(--blue);font-weight:600}
+
+.rcard{background:var(--g);border:0.5px solid var(--b);border-radius:var(--r);padding:13px;margin-bottom:9px;backdrop-filter:blur(20px)}
+.rch{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.rci{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.rcn{font-size:12px;font-weight:600;letter-spacing:-.2px}
+.rcs{font-size:10px;color:var(--t2);margin-top:1px}
+.rcd{font-size:11px;color:var(--t2);line-height:1.6;margin-bottom:9px}
+.rclink{display:inline-flex;align-items:center;gap:4px;background:var(--bl2);border:0.5px solid rgba(41,151,255,.22);border-radius:6px;padding:5px 11px;font-size:11px;font-weight:600;color:var(--blue);text-decoration:none;cursor:pointer;transition:background .15s}
+.rclink:active{background:rgba(41,151,255,.25)}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.tag{background:var(--g2);border:0.5px solid var(--b);border-radius:5px;padding:2px 7px;font-size:9px;color:var(--t2);font-weight:500}
+
+.mbox{background:rgba(255,255,255,0.038);border-radius:7px;padding:10px 12px;font-size:11px;line-height:1.7;color:var(--t);font-style:italic;margin:7px 0;white-space:pre-line}
+.cbtn{background:var(--g2);border:0.5px solid var(--b2);border-radius:6px;padding:5px 11px;font-size:10px;font-weight:600;color:var(--blue);cursor:pointer;font-family:var(--ff);transition:all .15s}
+.cbtn:active{background:var(--g3)}
+
+.row-ok{border-color:rgba(50,215,75,.18);background:var(--gr2)}
+.row-warn{border-color:rgba(255,214,10,.18);background:var(--am2)}
+.row-info{border-color:rgba(41,151,255,.13);background:var(--bl3)}
+.sr{display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;padding:10px 12px;background:var(--g);border:0.5px solid var(--b);border-radius:var(--r2)}
+.sri{font-size:13px;flex-shrink:0;margin-top:1px}
+.srt{font-size:11px;color:var(--t2);line-height:1.55}
+.srt b{color:var(--t);font-weight:600}
+
+.tl-card{background:var(--g);border:0.5px solid var(--b);border-radius:var(--r);padding:14px;margin-bottom:9px;backdrop-filter:blur(20px)}
+input[type=range]{width:100%;accent-color:var(--blue);margin:.4rem 0}
+.tl-out{font-size:12px;color:var(--t);line-height:1.7;margin-top:7px}
+.tl-out strong{color:var(--blue);font-weight:700}
+
+.crm-form{background:var(--g);border:0.5px solid var(--b);border-radius:var(--r);padding:13px;margin-bottom:10px}
+.crm-form input,.crm-form select,.crm-form textarea{width:100%;background:rgba(255,255,255,0.06);border:0.5px solid var(--b2);border-radius:7px;padding:9px 11px;font-size:12px;color:var(--t);font-family:var(--ff);margin-bottom:8px;outline:none}
+.crm-form input::placeholder,.crm-form textarea::placeholder{color:var(--t3)}
+.crm-form textarea{min-height:60px;resize:vertical}
+.crm-form select option{background:#1a1a24;color:var(--t)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-add{background:var(--blue);color:#fff;border:none;border-radius:7px;padding:9px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--ff);width:100%;transition:opacity .15s}
+.btn-add:active{opacity:.8}
+.client-card{background:var(--g);border:0.5px solid var(--b);border-radius:var(--r);padding:12px 13px;margin-bottom:8px;position:relative}
+.cc-row{display:flex;align-items:flex-start;gap:10px}
+.cc-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.cc-name{font-size:13px;font-weight:600;letter-spacing:-.2px;margin-bottom:2px}
+.cc-meta{font-size:10px;color:var(--t2);margin-bottom:5px}
+.cc-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--t3);font-size:16px;cursor:pointer;line-height:1;padding:2px 6px}
+.cc-del:active{color:var(--red)}
+.cc-note{font-size:11px;color:var(--t2);background:rgba(255,255,255,0.04);border-radius:6px;padding:7px 9px;margin-top:6px;line-height:1.5}
+.empty-state{text-align:center;padding:30px 20px;color:var(--t2);font-size:12px}
+
+.sched-form{background:var(--g);border:0.5px solid var(--b);border-radius:var(--r);padding:13px;margin-bottom:10px}
+.sched-form input,.sched-form select{width:100%;background:rgba(255,255,255,0.06);border:0.5px solid var(--b2);border-radius:7px;padding:9px 11px;font-size:12px;color:var(--t);font-family:var(--ff);margin-bottom:8px;outline:none}
+.sched-form select option{background:#1a1a24}
+.job-item{background:var(--g);border:0.5px solid var(--b);border-radius:var(--r2);padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:10px}
+.ji-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ji-info{flex:1}
+.ji-name{font-size:12px;font-weight:500;margin-bottom:1px}
+.ji-meta{font-size:10px;color:var(--t2)}
+.ji-price{font-size:13px;font-weight:700;color:var(--blue)}
+.ji-del{background:none;border:none;color:var(--t3);font-size:14px;cursor:pointer;padding:2px 5px}
+.ji-del:active{color:var(--red)}
+.ji-done{background:var(--green);color:#fff;border:none;border-radius:5px;padding:3px 8px;font-size:9px;font-weight:600;cursor:pointer;font-family:var(--ff)}
+
+.chart-wrap{background:var(--g);border:0.5px solid var(--b);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.chart-title{font-size:11px;font-weight:600;color:var(--t);margin-bottom:12px}
+.bar-chart{display:flex;align-items:flex-end;gap:4px;height:80px}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+.bar-fill{width:100%;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--blue),rgba(41,151,255,.4));min-height:2px}
+.bar-lbl{font-size:8px;color:var(--t3);white-space:nowrap}
+.bar-val{font-size:8px;color:var(--blue);font-weight:600}
+
+.comp-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center}
+.comp-overlay.show{display:flex}
+.comp-modal{background:rgba(22,22,30,0.97);border:0.5px solid var(--b2);border-radius:20px;padding:28px 22px;text-align:center;max-width:270px;width:90%;backdrop-filter:blur(40px);transform:scale(.84);opacity:0;transition:all .38s cubic-bezier(.34,1.56,.64,1)}
+.comp-modal.show{transform:scale(1);opacity:1}
+.comp-e{font-size:50px;margin-bottom:10px;display:block;animation:rock 1.2s ease infinite alternate}
+@keyframes rock{from{transform:rotate(-5deg)scale(1)}to{transform:rotate(5deg)scale(1.07)}}
+.comp-t{font-size:20px;font-weight:700;letter-spacing:-.4px;margin-bottom:5px}
+.comp-s{font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:18px}
+.comp-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--ff);width:100%}
+
+.sc{margin-bottom:18px}
+</style>
+</head>
+<body>
+<div class="app">
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#2997ff"/><stop offset="100%" stop-color="#32d74b"/></linearGradient></defs></svg>
+
+<div class="topbar">
+  <div class="tb-l">
+    <svg class="apl" viewBox="0 0 814 1000"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 790.7 0 663 0 541.8c0-207.8 135.4-317.9 268.5-317.9 69.6 0 127.7 45.8 170.6 45.8 40.3 0 107.7-48.4 186.8-48.4l7.6.1c-10.2 15.4-12.9 24.8-12.9 45.8 0 111.4 88.6 198.5 182.8 198.5z"/></svg>
+    <div><div class="app-n">Field Tech Pro</div><div class="app-s">Jagan Sharma · 805-754-0825</div></div>
+  </div>
+  <div class="sbadge"><span class="live"></span>Active</div>
+</div>
+
+<div class="hero">
+  <div class="h-label">MacFox Savings Fund</div>
+  <div class="h-title">Your <span class="h-grad">ride is earned.</span></div>
+  <div class="ring-row">
+    <div class="ring-wrap">
+      <svg width="72" height="72" viewBox="0 0 72 72"><circle class="rbg" cx="36" cy="36" r="33"/><circle class="rfill" id="rc" cx="36" cy="36" r="33"/></svg>
+      <div class="rpct" id="rpct">0%</div>
+    </div>
+    <div style="flex:1"><div class="bnum" id="earn-big">$0</div><div class="bsub">of $1,499 goal</div></div>
+  </div>
+  <div class="chips">
+    <div class="chip"><div class="chip-v" id="c-jobs">0</div><div class="chip-l">Jobs</div></div>
+    <div class="chip"><div class="chip-v" id="c-left" style="color:var(--blue)">$1,499</div><div class="chip-l">To go</div></div>
+    <div class="chip"><div class="chip-v" id="c-wk">—</div><div class="chip-l">Weeks</div></div>
+    <div class="chip"><div class="chip-v" id="c-avg">$0</div><div class="chip-l">Avg/job</div></div>
+  </div>
+  <div class="motive" onclick="nextMotive()">
+    <div class="m-eye">Daily motivation · tap to refresh</div>
+    <div class="m-body" id="mot-txt"></div>
+    <div class="m-tap">Field Tech Pro · 805-754-0825</div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nt active" onclick="showTab('dash',this)">Dashboard</div>
+  <div class="nt" onclick="showTab('schedule',this)">Schedule</div>
+  <div class="nt" onclick="showTab('clients',this)">Clients</div>
+  <div class="nt" onclick="showTab('guides',this)">Guides</div>
+  <div class="nt" onclick="showTab('resources',this)">Resources</div>
+  <div class="nt" onclick="showTab('scripts',this)">Scripts</div>
+  <div class="nt" onclick="showTab('safety',this)">Safety</div>
+  <div class="nt" onclick="showTab('analytics',this)">Analytics</div>
+  <div class="nt" onclick="showTab('getclients',this)">Get Clients</div>
+  <div class="nt" onclick="showTab('timeline',this)">Timeline</div>
+  <div class="nt" onclick="showTab('pricing',this)">Pricing</div>
+</div>
+
+<div class="panels">
+
+<div class="panel active" id="panel-dash">
+  <div class="sec">Services — log a completed job</div>
+  <div class="glist" id="svc-list"></div>
+</div>
+
+<div class="panel" id="panel-schedule">
+  <div class="sec">Book an upcoming job</div>
+  <div class="sched-form">
+    <div class="form-row">
+      <input type="text" id="sch-client" placeholder="Client name">
+      <input type="text" id="sch-date" placeholder="Date (e.g. Mon Apr 14)">
+    </div>
+    <div class="form-row">
+      <input type="text" id="sch-time" placeholder="Time (e.g. 3:00 PM)">
+      <select id="sch-svc"><option value="">Select service…</option></select>
+    </div>
+    <input type="text" id="sch-loc" placeholder="Location (e.g. Starbucks on Main)">
+    <button class="btn-add" onclick="addJob()">+ Add to Schedule</button>
+  </div>
+  <div class="sec sec-gap">Upcoming jobs</div>
+  <div id="job-list"><div class="empty-state">No jobs scheduled yet.</div></div>
+</div>
+
+<div class="panel" id="panel-clients">
+  <div class="sec">Add a client</div>
+  <div class="crm-form">
+    <input type="text" id="cl-name" placeholder="Full name">
+    <div class="form-row">
+      <input type="text" id="cl-phone" placeholder="Phone number">
+      <input type="text" id="cl-where" placeholder="How you met them">
+    </div>
+    <textarea id="cl-note" placeholder="Notes (device type, issues, anything useful)"></textarea>
+    <button class="btn-add" onclick="addClient()">+ Save Client</button>
+  </div>
+  <div class="sec sec-gap">Client roster — <span id="cl-count">0</span> saved</div>
+  <div id="client-list"><div class="empty-state">No clients yet. Add your first one above.</div></div>
+</div>
+
+<div class="panel" id="panel-guides">
+  <div class="sec">Tap any service to expand the full guide</div>
+  <div id="guide-list"></div>
+</div>
+
+<div class="panel" id="panel-resources">
+  <div class="sec">Watch before your first job</div>
+  <div id="res-watch"></div>
+  <div class="sec sec-gap">Apple official support</div>
+  <div id="res-apple"></div>
+  <div class="sec sec-gap">Tools to bookmark</div>
+  <div id="res-tools"></div>
+</div>
+
+<div class="panel" id="panel-scripts">
+  <div class="sec">Ready-to-send templates — your number is pre-filled</div>
+  <div id="script-list"></div>
+</div>
+
+<div class="panel" id="panel-safety">
+  <div class="sec">Where to work</div>
+  <div class="sr row-ok"><div class="sri">✅</div><div class="srt"><b>Public spots</b> — Starbucks, library, park. Client brings device to you. Safe, professional, zero risk. This is your default.</div></div>
+  <div class="sr row-ok"><div class="sri">✅</div><div class="srt"><b>Your kitchen table</b> — invite clients over. Parent is home. Great setup for longer jobs.</div></div>
+  <div class="sr row-ok"><div class="sri">✅</div><div class="srt"><b>Their driveway or porch</b> — fine for quick 15-min fixes. Open, visible, easy to leave.</div></div>
+  <div class="sr row-warn"><div class="sri">⚠️</div><div class="srt"><b>Inside a stranger's home alone</b> — avoid. If the job needs it, bring a parent or friend.</div></div>
+  <div class="sec sec-gap">Which clients are safe</div>
+  <div class="sr row-ok"><div class="sri">✅</div><div class="srt"><b>Friends' parents, family, family friends</b> — zero stranger risk, highest referral rate.</div></div>
+  <div class="sr row-ok"><div class="sri">✅</div><div class="srt"><b>Nextdoor neighbors</b> — community-verified. Trust is baked in.</div></div>
+  <div class="sr row-ok"><div class="sri">✅</div><div class="srt"><b>School staff</b> — teachers, admin. Safe environment, great word-of-mouth.</div></div>
+  <div class="sr row-warn"><div class="sri">⚠️</div><div class="srt"><b>Cold online strangers</b> — get a parent vibe check before any first meeting.</div></div>
+  <div class="sec sec-gap">Per-job checklist</div>
+  <div class="sr row-info"><div class="sri">1</div><div class="srt"><b>Tell a parent</b> who the client is, where you're going, when you'll be back.</div></div>
+  <div class="sr row-info"><div class="sri">2</div><div class="srt"><b>Confirm price upfront</b> — "Just to confirm, this is $[X] via Apple Cash when we're done."</div></div>
+  <div class="sr row-info"><div class="sri">3</div><div class="srt"><b>Get Apple Cash on the spot</b> — never leave without it. Send to 805-754-0825.</div></div>
+  <div class="sr row-info"><div class="sri">4</div><div class="srt"><b>Never store passwords</b> — forget them the moment you're done.</div></div>
+  <div class="sr row-info"><div class="sri">5</div><div class="srt"><b>If anything feels wrong — leave.</b> No job is worth more than your safety.</div></div>
+</div>
+
+<div class="panel" id="panel-analytics">
+  <div class="sec">Earnings by service</div>
+  <div class="chart-wrap">
+    <div class="chart-title">Jobs by service (all time)</div>
+    <div class="bar-chart" id="bar-chart"></div>
+  </div>
+  <div class="sec sec-gap">Stats</div>
+  <div class="glist" id="stat-list"></div>
+  <div class="sec sec-gap">Milestones</div>
+  <div id="milestone-list"></div>
+</div>
+
+<div class="panel" id="panel-getclients">
+  <div class="sec">Best channels ranked</div>
+  <div class="glist" style="margin-bottom:13px">
+    <div class="grow"><div class="gi" style="background:var(--gr2)">🏆</div><div class="ginfo"><div class="gname">Friends' parents & family friends</div><div class="gdesc">Easiest yes, zero stranger risk, highest referral rate</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--bl2)">📱</div><div class="ginfo"><div class="gname">Nextdoor</div><div class="gdesc">High-trust neighbor community — post here first</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--pu2)">🏫</div><div class="ginfo"><div class="gname">School staff</div><div class="gdesc">Teachers, admin — underserved, grateful, great referrers</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--am2)">📋</div><div class="ginfo"><div class="gname">Neighborhood flyers</div><div class="gdesc">Library board, coffee shop, laundromat, mailboxes</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--rd2)">👴</div><div class="ginfo"><div class="gname">Grandparents' circle</div><div class="gdesc">Older adults = highest tech confusion = most grateful clients</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--te2)">⛪</div><div class="ginfo"><div class="gname">Church / community groups</div><div class="gdesc">Tight-knit trust circles, word spreads fast</div></div></div>
+  </div>
+  <div class="sec">Scripts for every moment</div>
+  <div class="rcard">
+    <div class="rch"><div class="rci" style="background:var(--bl2)">▶</div><div><div class="rcn">Opening line</div><div class="rcs">Say this before every job starts</div></div></div>
+    <div class="mbox">"Before I start — just to confirm, this will be $[price] paid via Apple Cash when we're done. Does that work for you?"</div>
+  </div>
+  <div class="rcard">
+    <div class="rch"><div class="rci" style="background:var(--gr2)">✓</div><div><div class="rcn">Closing line</div><div class="rcs">Every single job, every single time</div></div></div>
+    <div class="mbox">"All done! Send the Apple Cash to 805-754-0825. And — if you know anyone who could use iPhone help, I'd really appreciate the referral."</div>
+  </div>
+  <div class="rcard">
+    <div class="rch"><div class="rci" style="background:var(--am2)">💬</div><div><div class="rcn">Price objection handler</div></div></div>
+    <div class="mbox">"The Apple Store charges $99 just to look at it and books a week out. I'm $20, I come to you, and I'll have it done before you finish your coffee. Want to try it?"</div>
+  </div>
+</div>
+
+<div class="panel" id="panel-timeline">
+  <div class="sec">MacFox timeline calculator</div>
+  <div class="tl-card">
+    <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Jobs per week you can realistically do</div>
+    <input type="range" min="1" max="20" step="1" value="4" id="tl-sl" oninput="calcTl()">
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3)"><span>1/wk</span><span>20/wk</span></div>
+    <div class="tl-out" id="tl-out"></div>
+  </div>
+  <div class="sec sec-gap">Income scenarios</div>
+  <div class="glist" style="margin-bottom:13px">
+    <div class="grow"><div class="gi" style="background:rgba(255,255,255,0.04);font-size:13px">🐢</div><div class="ginfo"><div class="gname">Casual — 2 jobs/week</div><div class="gdesc">~$38/wk · MacFox in ~10 months</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--bl2);font-size:13px">⚡</div><div class="ginfo"><div class="gname">Consistent — 5 jobs/week</div><div class="gdesc">~$95/wk · MacFox in ~4 months</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--gr2);font-size:13px">🚀</div><div class="ginfo"><div class="gname">Grind — 10 jobs/week</div><div class="gdesc">~$190/wk · MacFox in ~8 weeks</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--am2);font-size:13px">👑</div><div class="ginfo"><div class="gname">Beast mode — 15+/week</div><div class="gdesc">~$285/wk · MacFox in ~5 weeks</div></div></div>
+  </div>
+  <div class="sec">Ways to earn faster</div>
+  <div class="glist">
+    <div class="grow"><div class="gi" style="background:var(--bl2);font-size:13px">📦</div><div class="ginfo"><div class="gname">Bundle services</div><div class="gdesc">Speed fix + clean + backup = $50 package</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--gr2);font-size:13px">🔄</div><div class="ginfo"><div class="gname">Monthly check-in plan</div><div class="gdesc">$10/month "phone health" for regulars</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--pu2);font-size:13px">👥</div><div class="ginfo"><div class="gname">Group lessons</div><div class="gdesc">3 seniors at once = $30 each = $90/hr</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--am2);font-size:13px">⭐</div><div class="ginfo"><div class="gname">Ask for tips</div><div class="gdesc">Happy clients often tip $5–15. Never hurts to smile.</div></div></div>
+  </div>
+</div>
+
+<div class="panel" id="panel-pricing">
+  <div class="sec">Your official price list</div>
+  <div class="glist" style="margin-bottom:13px" id="price-list"></div>
+  <div class="sec sec-gap">Bundle packages</div>
+  <div class="glist" style="margin-bottom:13px">
+    <div class="grow"><div class="gi" style="background:var(--bl2);font-size:13px">📱</div><div class="ginfo"><div class="gname">Full iPhone Refresh</div><div class="gdesc">Speed fix + screen clean + photo backup</div></div><div class="gr"><div class="ptag">$50</div><div style="font-size:9px;color:var(--green)">Save $5</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--gr2);font-size:13px">🎓</div><div class="ginfo"><div class="gname">New Device Package</div><div class="gdesc">Setup + app install + full walkthrough</div></div><div class="gr"><div class="ptag">$45</div><div style="font-size:9px;color:var(--green)">Save $10</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--pu2);font-size:13px">🏠</div><div class="ginfo"><div class="gname">Home Tech Day</div><div class="gdesc">Up to 3 devices, 2 hours, one household</div></div><div class="gr"><div class="ptag">$75</div><div style="font-size:9px;color:var(--green)">Best value</div></div></div>
+    <div class="grow"><div class="gi" style="background:var(--am2);font-size:13px">👴</div><div class="ginfo"><div class="gname">Senior Starter</div><div class="gdesc">iPad/MacBook lesson + email cleanup</div></div><div class="gr"><div class="ptag">$40</div><div style="font-size:9px;color:var(--green)">Save $5</div></div></div>
+  </div>
+  <div class="sec">Apple Cash — how to get paid</div>
+  <div class="rcard">
+    <div class="rcd">Tell every client: <em>"Send Apple Cash to <b>805-754-0825</b> — open Messages, tap the $ icon, and type the amount."</em> Show them on your phone if needed. Takes 30 seconds.</div>
+    <div class="tags"><span class="tag">No ID needed</span><span class="tag">Instant transfer</span><span class="tag">iPhone to iPhone</span><span class="tag">Free to use</span></div>
+  </div>
+</div>
+
+</div><!-- /panels -->
+
+<!-- COMPLETION OVERLAY -->
+<div class="comp-overlay" id="comp-overlay">
+  <div class="comp-modal" id="comp-modal">
+    <span class="comp-e">🎉</span>
+    <div class="comp-t">MacFox fund — complete.</div>
+    <div class="comp-s">You earned every dollar yourself, Jagan.<br>Go get your ride.</div>
+    <button class="comp-btn" onclick="closeComp()">Let's ride →</button>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+const GOAL=1499,AVG=19;
+const MOTIVES=["Every job you do today is one day closer to that MacFox. Nobody's handing it to you — you're building it.","The MacFox doesn't care about excuses. Log a job.","Most people your age are just watching. You're actually building something. That's rare.","One job = one hour = $19 closer. Do the math then do the job.","You started this. Finish it. The ride feels completely different when you earned it yourself.","Consistency beats intensity. You don't need a perfect week — you just need today.","Picture pulling up on a MacFox you paid for yourself. Nobody can take that from you.","The goal is specific. The plan is clear. All that's left is execution.","Every hesitant client is noise. The next one says yes.","Rich people solve problems for others. You're already doing it.","Log another job. The bar moves every time.","Your peers will wonder how you got it. You'll know exactly how.","Doubt kills more dreams than failure ever will. Do the job.","Small actions compound. $20 today is a completely different person in 6 months.","You're not just saving for a MacFox. You're learning how to make money. That skill never expires.","Every client you help will tell two more people. This snowballs."];
+let mi=Math.floor(Math.random()*MOTIVES.length);
+function ld(){try{return JSON.parse(localStorage.getItem('ftp4')||'null')||{e:0,j:0,c:{},clients:[],jobs:[],log:[]};}catch(e){return{e:0,j:0,c:{},clients:[],jobs:[],log:[]};}}
+let S=ld();
+function sv(){try{localStorage.setItem('ftp4',JSON.stringify(S));}catch(e){}}
+
+function updateHero(){
+  const pct=Math.min((S.e/GOAL)*100,100);
+  const circ=2*Math.PI*33;
+  document.getElementById('rc').style.strokeDashoffset=circ*(1-pct/100);
+  document.getElementById('rpct').textContent=Math.round(pct)+'%';
+  document.getElementById('earn-big').textContent='$'+S.e;
+  document.getElementById('c-jobs').textContent=S.j;
+  document.getElementById('c-left').textContent='$'+Math.max(0,GOAL-S.e);
+  const wks=S.e<GOAL?Math.ceil((GOAL-S.e)/(4*AVG)):'✓';
+  document.getElementById('c-wk').textContent=wks;
+  document.getElementById('c-avg').textContent=S.j>0?'$'+Math.round(S.e/S.j):'$0';
+  if(pct>=100)showComp();
+  renderAnalytics();
+}
+
+function showComp(){
+  const o=document.getElementById('comp-overlay');
+  o.classList.add('show');
+  setTimeout(()=>document.getElementById('comp-modal').classList.add('show'),50);
+}
+function closeComp(){
+  document.getElementById('comp-modal').classList.remove('show');
+  setTimeout(()=>document.getElementById('comp-overlay').classList.remove('show'),400);
+}
+
+function nextMotive(){mi=(mi+1)%MOTIVES.length;const el=document.getElementById('mot-txt');el.style.opacity='0';setTimeout(()=>{el.textContent=MOTIVES[mi];el.style.transition='opacity .3s';el.style.opacity='1';},150);}
+document.getElementById('mot-txt').textContent=MOTIVES[mi];
+
+const ICONS=[['var(--bl2)','📱'],['var(--am2)','⚡'],['var(--gr2)','📶'],['var(--pu2)','🖼'],['var(--te2)','⌚'],['var(--rd2)','🎧'],['var(--bl2)','📧'],['var(--gr2)','📲'],['var(--pu2)','💻'],['var(--am2)','✨']];
+const SVC=[
+  {n:"iPhone Setup",p:25,d:"New phone setup, data transfer, iCloud",steps:[{t:"Get Apple ID credentials",b:"Ask for their Apple ID and password before anything else. If they've forgotten it, go to iforgot.apple.com first."},{t:"Back up the old phone",b:"Settings → [Name] → iCloud → iCloud Backup → Back Up Now. Wait for completion. This protects everything."},{t:"Sign out of old phone",b:"Settings → [Name] → scroll to bottom → Sign Out. Choose to keep a copy of data when prompted."},{t:"Power on new phone and restore",b:"Follow setup screen. Connect to Wi-Fi. Choose Restore from iCloud Backup. Sign in with Apple ID. Takes 10–30 minutes."},{t:"Verify everything transferred",b:"Check contacts, photos, apps, texts. Set up Face ID or Touch ID. Walk client through home screen."}],tools:"Both iPhones, Wi-Fi, Apple ID credentials",tip:"If they forgot Apple ID password, go to iforgot.apple.com first. Most common blocker on setup jobs."},
+  {n:"Speed Fix",p:20,d:"Clear storage, kill drain, make it fast again",steps:[{t:"Check storage",b:"Settings → General → iPhone Storage. Under 2GB free = your problem."},{t:"Delete unused apps",b:"Tap app in Storage list → see size and last used date → delete anything unopened in months."},{t:"Clear Safari cache",b:"Settings → Safari → Clear History and Website Data. Frees space and speeds up browsing."},{t:"Disable Background App Refresh",b:"Settings → General → Background App Refresh → Off."},{t:"Restart the phone",b:"Hold side + volume down → slide to power off → 30 seconds → power on."},{t:"Check battery health",b:"Settings → Battery → Battery Health. Below 80% = degraded battery, needs Apple replacement."}],tools:"Just the iPhone",tip:"Last resort: Settings → Accessibility → Motion → Reduce Motion ON. Instant snappiness improvement."},
+  {n:"Wi-Fi Fix",p:20,d:"Fix slow, dropping, or non-connecting Wi-Fi",steps:[{t:"Rule out device vs router",b:"Test on another device. If everything is slow, problem is router or ISP."},{t:"Restart the router",b:"Unplug from wall. Count 30 full seconds. Plug back in. Wait 2 minutes."},{t:"Forget and rejoin network",b:"Settings → Wi-Fi → (i) next to network → Forget → reconnect with password."},{t:"Check router placement",b:"Routers need open air. Further = weaker. Recommend central elevated location."},{t:"Speed test",b:"Go to fast.com. Show before and after numbers to client."}],tools:"Access to router, the problem device",tip:"If nothing fixes it, call the ISP — that's outside your scope and you've done your part."},
+  {n:"Photo Backup",p:20,d:"Back up all photos to iCloud or Google Photos",steps:[{t:"Ask preference",b:"Google Photos = free 15GB, works anywhere. iCloud = Apple ecosystem, paid over 5GB."},{t:"Set up Google Photos",b:"Download app → sign in with Gmail → profile → Photos settings → Backup → Turn On."},{t:"Set up iCloud Photos",b:"Settings → [Name] → iCloud → Photos → toggle on iCloud Photos."},{t:"Let it upload",b:"Leave on Wi-Fi, plugged in. Show backup progress in Google Photos."},{t:"Verify",b:"Open photos.google.com or icloud.com in browser and show client their photos are safe."}],tools:"iPhone, Wi-Fi, Google or Apple account",tip:"If iCloud is full and they don't want to pay, Google Photos is always the free fix."},
+  {n:"Apple Watch",p:15,d:"Pair, configure apps and faces",steps:[{t:"Check compatibility",b:"iPhone 6s or newer, iOS 17+. Keep both devices close together."},{t:"Open Watch app",b:"Pre-installed on iPhone. Tap Start Pairing. Hold camera over swirling Watch pattern."},{t:"Set up as new Watch",b:"Choose New Apple Watch. Select wrist. Software update takes 15–25 minutes."},{t:"Configure health and notifications",b:"Enter health info, enable notifications, add Apple Pay, set Activity goals."},{t:"Teach gestures",b:"Swipe up = Control Center. Swipe down = Notifications. Crown = Home. Hold side = Power/Pay."}],tools:"iPhone, Apple Watch, Apple ID, Wi-Fi",tip:"Start the update and use those 20 minutes to fix something else for them."},
+  {n:"AirPods Fix",p:12,d:"Fix pairing, audio dropout, connection issues",steps:[{t:"Check charge",b:"Open case near iPhone. Popup shows charge levels. Under 10% → charge 15 min first."},{t:"Forget and re-pair",b:"Settings → Bluetooth → (i) next to AirPods → Forget → open case → hold back button → reconnect."},{t:"Clean them",b:"Dry cotton swab on speaker mesh. Debris = most common cause of muffled audio."},{t:"Factory reset",b:"AirPods in open case → hold back button 15 seconds until amber then white flash."},{t:"Check audio balance",b:"Settings → Accessibility → Audio/Visual → Balance slider. Center it if off."}],tools:"AirPods, case, iPhone",tip:"One AirPod never charging = needs Apple service. Be honest — not fixable without parts."},
+  {n:"Inbox Cleanup",p:15,d:"Block spam, clean email, tidy messages",steps:[{t:"Unsubscribe from mass emails",b:"Mail → search 'unsubscribe' → open top senders → tap Unsubscribe."},{t:"Block spam texts",b:"Open spam text → tap sender → Info → Block this Caller."},{t:"Filter unknown senders",b:"Settings → Messages → Filter Unknown Senders → On."},{t:"Mark junk in Mail",b:"Swipe left on junk → More → Mark as Junk. Trains the filter."},{t:"Organize remaining email",b:"Create folders: Bills, Family, Receipts. Show client how to move emails there."}],tools:"iPhone, email login if needed",tip:"Deleting 200 old emails in front of them is a huge wow moment. Inbox zero = magic."},
+  {n:"App Install",p:10,d:"Install any app, teach how to use it",steps:[{t:"Find correct app",b:"App Store → Search → exact name → check developer name → Get → Install."},{t:"Set up account",b:"Help sign in or create account with their email."},{t:"Walk through every screen",b:"Tap through every section together. Plain English only. Check in constantly."},{t:"Focus on their specific need",b:"Show the one thing they want 3 times. Have them try it themselves."},{t:"Leave a written reference",b:"Write 3–5 steps in their Notes app for what they'll do most."}],tools:"iPhone, account credentials",tip:"Patience is the product. The more patient you are, the more referrals you get."},
+  {n:"iPad/Mac Lesson",p:30,d:"1-hour session, any skill level",steps:[{t:"Start with their goal",b:"Ask what's been most frustrating. Let them set the agenda."},{t:"Navigation basics first",b:"iPad: tap, swipe, pinch, home bar. MacBook: trackpad, Dock, Finder, menu bar."},{t:"Tackle their specific need",b:"Email, FaceTime, Pages, photos — whatever they want. Let them do each step."},{t:"MacBook shortcuts",b:"Cmd+C, Cmd+V, Cmd+Z, Cmd+Space, Cmd+Tab. Write these on a card."},{t:"Practice plan",b:"'Try this today, this this week.' Give your number for quick questions."}],tools:"Whatever device they have",tip:"40-minute sessions often work better than 60 for older clients. End while they're energized."},
+  {n:"Screen Clean",p:15,d:"Physical clean + settings optimization",steps:[{t:"Screen clean",b:"Microfiber cloth only, slightly damp with water. Slow circles. No alcohol on OLED."},{t:"Port clean",b:"Dry wooden toothpick, gently scrape lint from charging port. Never metal."},{t:"Display settings",b:"Settings → Display & Brightness: True Tone, Auto-Brightness, Night Shift."},{t:"Check Do Not Disturb",b:"Settings → Focus → Do Not Disturb. Make sure not accidentally on all day."},{t:"iOS update",b:"Settings → General → Software Update. Start before you leave."}],tools:"Microfiber cloth, dry wooden toothpick",tip:"Great $15 add-on to any job. Takes 10 minutes. Clients love seeing their phone look clean."},
+];
+
+const SVC_NAMES=SVC.map(s=>s.n);
+const SCRIPTS=[
+  {icon:'var(--bl2)',e:'🏘',name:'Nextdoor post',sub:'Post in your neighborhood tonight',id:'s0',text:`Hey neighbors! I'm a local teen offering affordable Apple and iPhone tech help — phone setup, slow phone fixes, Wi-Fi, photo backup, AirPods, and more.\n\nI meet at Starbucks or your driveway — no need to let me inside your home. Patient, thorough, and I only accept Apple Cash.\n\nText me at 805-754-0825 to book a time.`},
+  {icon:'var(--pu2)',e:'📲',name:'Text to contacts',sub:'Send to every adult you know',id:'s1',text:`Hey! I'm doing iPhone and Apple device help on the side — slow phone fixes, Wi-Fi issues, photo backup, app setup, and more.\n\n$15–30, Apple Cash, I come to you or we meet at a coffee shop.\n\nKnow anyone who might need it? My number is 805-754-0825.`},
+  {icon:'var(--gr2)',e:'📄',name:'Flyer copy',sub:'Print and post around the neighborhood',id:'s2',text:`iPhone acting up? I fix it.\nSetup · Speed fixes · Wi-Fi · Photo backup · AirPods\n$15–30 · Apple Cash · Local teen · Fast & patient\nTEXT: 805-754-0825`},
+  {icon:'var(--am2)',e:'🏫',name:'Tell a teacher',sub:'Say this in person to school staff',id:'s3',text:`Hey [Name], I'm doing iPhone and tech help on the side for people in the area — slow phone fixes, setup, Wi-Fi, that kind of thing.\n\nIf you or anyone you know ever needs help, I'd love to be their person. I charge $15–30 and accept Apple Cash.\n\nMy number is 805-754-0825.`},
+  {icon:'var(--rd2)',e:'❌',name:'Price objection handler',sub:'When someone hesitates on price',id:'s4',text:`Totally understand — the Apple Store charges $99 just to look at it and books a week out. I'm $20, I come to you, and I'll have it fixed before you finish your coffee.\n\nWant to try it? 805-754-0825`},
+  {icon:'var(--te2)',e:'⭐',name:'Follow-up after job',sub:'Text this 2 days after completing a job',id:'s5',text:`Hey [Name], just checking in — is everything still working great with your device? Let me know if anything comes up!\n\nAnd if you know anyone who could use tech help, I'd really appreciate the referral. 805-754-0825 — Jagan`},
+  {icon:'var(--pk2)',e:'📦',name:'Upsell during a job',sub:'Offer this while already there',id:'s6',text:`While I'm here — I can also do a quick screen clean and back up your photos to the cloud. It's only $15 more and takes about 10 minutes. Want me to add that on?`},
+];
+const RW=[
+  {icon:'var(--rd2)',e:'▶',name:'iPhone setup from scratch',sub:'Apple Support · YouTube',desc:'Official new iPhone setup walkthrough. Watch before your first setup job — covers iCloud restore, Quick Start, and new account setup.',link:'https://www.youtube.com/results?search_query=apple+support+how+to+set+up+new+iphone',tags:['Setup','iCloud']},
+  {icon:'var(--am2)',e:'▶',name:'How to speed up a slow iPhone',sub:'YouTube tutorial',desc:'Storage cleanup, battery health, Background App Refresh, restart fix. Your most common service — know this cold.',link:'https://www.youtube.com/results?search_query=how+to+speed+up+slow+iphone',tags:['Speed','Storage']},
+  {icon:'var(--gr2)',e:'▶',name:'Wi-Fi troubleshooting guide',sub:'YouTube tutorial',desc:'Router restart, forget network, interference, speed testing. Watch so you understand what\'s actually happening.',link:'https://www.youtube.com/results?search_query=iphone+wifi+not+working+fix',tags:['Wi-Fi','Router']},
+  {icon:'var(--bl2)',e:'▶',name:'Google Photos setup guide',sub:'YouTube tutorial',desc:'Enable backup, check status, manage storage, verify it worked. Know this inside out — it\'s your main photo backup solution.',link:'https://www.youtube.com/results?search_query=google+photos+setup+backup+iphone',tags:['Photos','Backup']},
+  {icon:'var(--pu2)',e:'▶',name:'Apple Watch pairing walkthrough',sub:'Apple Support · YouTube',desc:'Full pairing and setup. The 20-min update surprises first-timers — watch this so it doesn\'t throw you off.',link:'https://www.youtube.com/results?search_query=how+to+pair+apple+watch+iphone',tags:['Apple Watch']},
+  {icon:'var(--te2)',e:'▶',name:'AirPods all troubleshooting',sub:'YouTube tutorial',desc:'Full reset, audio balance, cleaning, re-pairing for all models. Know the factory reset by heart — fixes 80% of issues.',link:'https://www.youtube.com/results?search_query=airpods+troubleshooting+reset+fix',tags:['AirPods','Reset']},
+];
+const RA=[
+  {icon:'var(--bl2)',e:'',name:'Apple Support — all iPhone help',sub:'support.apple.com/iphone',desc:'Bookmark this. Apple\'s official hub for every iPhone issue. When you hit something new mid-job, search here first.',link:'https://support.apple.com/iphone',tags:['Official','All issues']},
+  {icon:'var(--gr2)',e:'',name:'Transfer data to new iPhone',sub:'support.apple.com',desc:'Apple\'s official guide — iCloud backup, Quick Start, and cable. Read all three methods.',link:'https://support.apple.com/en-us/111842',tags:['Setup','Transfer']},
+  {icon:'var(--am2)',e:'',name:'iPhone storage & performance',sub:'support.apple.com',desc:'Exact Apple steps for freeing storage and improving performance. Use as your speed fix script.',link:'https://support.apple.com/en-us/111829',tags:['Storage','Speed']},
+  {icon:'var(--pu2)',e:'',name:'Reset AirPods — all models',sub:'support.apple.com',desc:'Factory reset for every AirPods generation. Models differ — this covers all officially.',link:'https://support.apple.com/en-us/111771',tags:['AirPods','Reset']},
+];
+const RT=[
+  {icon:'var(--bl2)',e:'🔑',name:'iforgot.apple.com',sub:'Apple ID recovery — bookmark now',desc:'Most critical tool you have. When a client forgot Apple ID password — which happens constantly — this is where you go first.',link:'https://iforgot.apple.com',tags:['Apple ID','Essential']},
+  {icon:'var(--gr2)',e:'⚡',name:'fast.com — Wi-Fi speed test',sub:'Netflix speed test tool',desc:'One tap, instant result. Show clients before and after speeds. Visual proof your work made a difference.',link:'https://fast.com',tags:['Wi-Fi','Proof']},
+  {icon:'var(--te2)',e:'📱',name:'Nextdoor — find local clients',sub:'nextdoor.com',desc:'Post in your neighborhood tonight. Best channel for fast real paying clients — trust is already built.',link:'https://nextdoor.com',tags:['Clients','Marketing']},
+  {icon:'var(--am2)',e:'🧠',name:'Practice on your own devices',sub:'Before every new service type',desc:'Before any paid job, run every step on yourself. Fake a speed fix on your own phone. Confidence = repetition.',link:null,tags:['Practice','Confidence']},
+  {icon:'var(--pu2)',e:'👪',name:'Family = your first real clients',sub:'Free practice with stakes',desc:'Offer to fix a parent\'s phone for free the first time. Real environment, real problems, zero pressure.',link:null,tags:['Practice','First clients']},
+];
+
+function logJob(i){S.e+=SVC[i].p;S.j+=1;S.c[i]=(S.c[i]||0)+1;S.log=S.log||[];S.log.push({svc:i,p:SVC[i].p,d:new Date().toLocaleDateString()});sv();updateHero();updateBadge(i);}
+function updateBadge(i){const b=document.getElementById('sb-'+i);if(!b)return;const n=S.c[i]||0;if(n>0){b.textContent='×'+n;b.style.display='inline';}}
+function showTab(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');el.classList.add('active');if(id==='analytics')renderAnalytics();}
+function toggleGuide(i){const b=document.getElementById('gb-'+i),ch=document.getElementById('gc-'+i),open=b.classList.contains('open');document.querySelectorAll('.gbody').forEach(x=>x.classList.remove('open'));document.querySelectorAll('.ghc').forEach(x=>x.classList.remove('open'));if(!open){b.classList.add('open');ch.classList.add('open');}}
+function goGuide(i){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));document.getElementById('panel-guides').classList.add('active');document.querySelectorAll('.nt')[3].classList.add('active');setTimeout(()=>{const el=document.getElementById('gh-'+i);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});toggleGuide(i);}},100);}
+function copyScript(id,btn){const t=document.getElementById(id).textContent;navigator.clipboard.writeText(t).then(()=>{btn.textContent='Copied ✓';btn.style.color='var(--green)';setTimeout(()=>{btn.textContent='Copy';btn.style.color='var(--blue)';},2000);}).catch(()=>{btn.textContent='Select & copy manually';});}
+function calcTl(){const j=parseInt(document.getElementById('tl-sl').value);const w=j*AVG,left=Math.max(0,GOAL-S.e),out=document.getElementById('tl-out');if(left===0){out.innerHTML='<strong style="color:var(--green)">Goal reached. Go buy your MacFox.</strong>';return;}const weeks=Math.ceil(left/w),months=(weeks/4.3).toFixed(1);out.innerHTML=`<strong>${j} job${j!==1?'s':''}/week</strong> × $${AVG} avg = <strong>$${w}/week</strong><br>$${left} remaining → <strong>${weeks} weeks</strong> (~${months} months)`;}
+function addClient(){const name=document.getElementById('cl-name').value.trim();if(!name)return;const client={id:Date.now(),name,phone:document.getElementById('cl-phone').value.trim(),where:document.getElementById('cl-where').value.trim(),note:document.getElementById('cl-note').value.trim(),added:new Date().toLocaleDateString()};S.clients=S.clients||[];S.clients.push(client);sv();['cl-name','cl-phone','cl-where','cl-note'].forEach(id=>{document.getElementById(id).value='';});renderClients();}
+function deleteClient(id){S.clients=S.clients.filter(c=>c.id!==id);sv();renderClients();}
+function renderClients(){const el=document.getElementById('client-list');document.getElementById('cl-count').textContent=(S.clients||[]).length;if(!(S.clients||[]).length){el.innerHTML='<div class="empty-state">No clients yet. Add your first one above.</div>';return;}el.innerHTML='';const colors=['var(--bl2)','var(--gr2)','var(--pu2)','var(--am2)','var(--te2)'];S.clients.slice().reverse().forEach(c=>{const col=colors[c.name.charCodeAt(0)%colors.length];const initials=c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();const div=document.createElement('div');div.className='client-card';div.innerHTML=`<button class="cc-del" onclick="deleteClient(${c.id})">×</button><div class="cc-row"><div class="cc-av" style="background:${col}">${initials}</div><div style="flex:1"><div class="cc-name">${c.name}</div><div class="cc-meta">${c.phone?'📞 '+c.phone+' · ':''}${c.where?'Via '+c.where:''}</div><div class="cc-meta">Added ${c.added}</div>${c.note?`<div class="cc-note">${c.note}</div>`:''}</div></div>`;el.appendChild(div);});}
+function addJob(){const client=document.getElementById('sch-client').value.trim();if(!client)return;const svcIdx=document.getElementById('sch-svc').value;const job={id:Date.now(),client,date:document.getElementById('sch-date').value.trim(),time:document.getElementById('sch-time').value.trim(),svc:svcIdx!==''?parseInt(svcIdx):-1,loc:document.getElementById('sch-loc').value.trim(),done:false};S.jobs=S.jobs||[];S.jobs.push(job);sv();['sch-client','sch-date','sch-time','sch-loc'].forEach(id=>{document.getElementById(id).value='';});document.getElementById('sch-svc').value='';renderJobs();}
+function deleteJob(id){S.jobs=S.jobs.filter(j=>j.id!==id);sv();renderJobs();}
+function doneJob(id){const j=(S.jobs||[]).find(x=>x.id===id);if(j&&!j.done){j.done=true;if(j.svc>=0)logJob(j.svc);sv();renderJobs();}}
+function renderJobs(){const el=document.getElementById('job-list');const jobs=S.jobs||[];if(!jobs.length){el.innerHTML='<div class="empty-state">No jobs scheduled yet.</div>';return;}el.innerHTML='';const active=jobs.filter(j=>!j.done);const done=jobs.filter(j=>j.done);const colors=['var(--blue)','var(--amber)','var(--green)','var(--purple)','var(--teal)','var(--pink)'];active.forEach((j,i)=>{const div=document.createElement('div');div.className='job-item';div.innerHTML=`<div class="ji-dot" style="background:${colors[i%6]}"></div><div class="ji-info"><div class="ji-name">${j.client}${j.svc>=0?' · '+SVC_NAMES[j.svc]:''}</div><div class="ji-meta">${j.date}${j.time?' at '+j.time:''}${j.loc?' · '+j.loc:''}</div></div><div style="display:flex;gap:5px">${j.svc>=0?`<button class="ji-done" onclick="doneJob(${j.id})">Done ✓</button>`:''}<button class="ji-del" onclick="deleteJob(${j.id})">×</button></div>`;el.appendChild(div);});if(done.length){const sec=document.createElement('div');sec.className='sec sec-gap';sec.textContent='Completed ('+done.length+')';el.appendChild(sec);done.slice(-3).reverse().forEach(j=>{const div=document.createElement('div');div.className='job-item';div.style.opacity='.4';div.innerHTML=`<div class="ji-dot" style="background:var(--green)"></div><div class="ji-info"><div class="ji-name">${j.client}${j.svc>=0?' · '+SVC_NAMES[j.svc]:''}</div><div class="ji-meta">Completed · ${j.date||'—'}</div></div><button class="ji-del" onclick="deleteJob(${j.id})">×</button>`;el.appendChild(div);});}}
+function renderAnalytics(){const chart=document.getElementById('bar-chart');if(!chart)return;chart.innerHTML='';const vals=SVC.map((s,i)=>S.c[i]||0);const max=Math.max(...vals,1);SVC.forEach((s,i)=>{const v=vals[i];const col=document.createElement('div');col.className='bar-col';const h=Math.round((v/max)*70)+2;col.innerHTML=`<div class="bar-val">${v>0?v:''}</div><div class="bar-fill" style="height:${h}px"></div><div class="bar-lbl">${s.n.split(' ')[0]}</div>`;chart.appendChild(col);});const stats=document.getElementById('stat-list');const topIdx=vals.indexOf(Math.max(...vals));stats.innerHTML=`<div class="grow"><div class="ginfo"><div class="gname">Total earned</div></div><div class="gr"><div class="ptag">$${S.e}</div></div></div><div class="grow"><div class="ginfo"><div class="gname">Total jobs logged</div></div><div class="gr"><div class="ptag">${S.j}</div></div></div><div class="grow"><div class="ginfo"><div class="gname">Average per job</div></div><div class="gr"><div class="ptag">$${S.j>0?Math.round(S.e/S.j):0}</div></div></div><div class="grow"><div class="ginfo"><div class="gname">Most booked service</div></div><div class="gr"><div style="font-size:10px;color:var(--blue);font-weight:600;text-align:right">${S.j>0?SVC[topIdx].n:'—'}</div></div></div><div class="grow"><div class="ginfo"><div class="gname">Remaining to goal</div></div><div class="gr"><div class="ptag" style="color:var(--amber)">$${Math.max(0,GOAL-S.e)}</div></div></div>`;const mlEl=document.getElementById('milestone-list');const milestones=[{a:100,l:"First $100 earned"},{a:250,l:"Quarter of the way"},{a:500,l:"One third there"},{a:750,l:"Halfway to your MacFox"},{a:1000,l:"$1,000 milestone"},{a:1250,l:"Almost there — $1,250"},{a:1499,l:"MacFox unlocked"}];mlEl.innerHTML='';milestones.forEach(m=>{const reached=S.e>=m.a;const div=document.createElement('div');div.style.cssText=`background:var(--g);border:0.5px solid var(--b);border-radius:var(--r2);margin-bottom:6px;padding:9px 12px;display:flex;align-items:center;gap:10px;opacity:${reached?'1':'.4'}`;div.innerHTML=`<div style="width:22px;height:22px;border-radius:50%;background:${reached?'var(--gr2)':'var(--g2)'};border:0.5px solid ${reached?'rgba(50,215,75,.3)':'var(--b)'};display:flex;align-items:center;justify-content:center;font-size:11px">${reached?'✓':'○'}</div><div style="flex:1;font-size:11px;font-weight:500;color:${reached?'var(--t)':'var(--t2)'}">${m.l}</div><div style="font-size:12px;font-weight:700;color:${reached?'var(--green)':'var(--t3)'}">$${m.a}</div>`;mlEl.appendChild(div);});}
+
+const svcList=document.getElementById('svc-list');
+SVC.forEach((s,i)=>{const[bg,em]=ICONS[i];const row=document.createElement('div');row.className='grow';row.innerHTML=`<div class="gi" style="background:${bg}">${em}</div><div class="ginfo"><div class="gname">${s.n}</div><div class="gdesc">${s.d}</div></div><div class="gr"><div style="display:flex;align-items:center;gap:5px"><span class="ptag">$${s.p}</span><span class="sbadge2" id="sb-${i}" style="display:none"></span></div><div style="display:flex;gap:5px;margin-top:3px"><button class="btn-p" onclick="logJob(${i})">Log +$${s.p}</button><button class="btn-s" onclick="goGuide(${i})">Guide →</button></div></div>`;svcList.appendChild(row);if(S.c&&S.c[i])updateBadge(i);});
+
+const guideList=document.getElementById('guide-list');
+SVC.forEach((s,i)=>{const[bg,em]=ICONS[i];const stepsHTML=s.steps.map((st,n)=>`<div class="step"><div class="sn">${n+1}</div><div><div class="st">${st.t}</div><div class="sb2">${st.b}</div></div></div>`).join('');const card=document.createElement('div');card.className='gcard';card.innerHTML=`<div class="gh" id="gh-${i}" onclick="toggleGuide(${i})"><div class="ghi" style="background:${bg}">${em}</div><div class="ghm"><div class="ght">${s.n}</div><div class="ghp">$${s.p} per job</div></div><div class="ghc" id="gc-${i}">▾</div></div><div class="gbody" id="gb-${i}">${stepsHTML}<div class="ibox"><b>You need:</b> ${s.tools}</div><div class="tbox"><b>Pro tip:</b> ${s.tip}</div></div>`;guideList.appendChild(card);});
+
+function buildRes(cid,items){const c=document.getElementById(cid);if(!c)return;items.forEach(r=>{const d=document.createElement('div');d.className='rcard';const tagsHTML=r.tags.map(t=>`<span class="tag">${t}</span>`).join('');const linkHTML=r.link?`<a class="rclink" href="${r.link}" target="_blank">Open →</a>`:'<span class="rclink" style="opacity:.4;cursor:default">Personal practice</span>';d.innerHTML=`<div class="rch"><div class="rci" style="background:${r.icon}">${r.e||'🔗'}</div><div><div class="rcn">${r.name}</div><div class="rcs">${r.sub}</div></div></div><div class="rcd">${r.desc}</div>${linkHTML}<div class="tags">${tagsHTML}</div>`;c.appendChild(d);});}
+buildRes('res-watch',RW);buildRes('res-apple',RA);buildRes('res-tools',RT);
+
+const scriptList=document.getElementById('script-list');
+SCRIPTS.forEach(sc=>{const d=document.createElement('div');d.className='rcard';d.innerHTML=`<div class="rch"><div class="rci" style="background:${sc.icon}">${sc.e}</div><div><div class="rcn">${sc.name}</div><div class="rcs">${sc.sub}</div></div></div><div class="mbox" id="${sc.id}">${sc.text}</div><button class="cbtn" onclick="copyScript('${sc.id}',this)">Copy</button>`;scriptList.appendChild(d);});
+
+const priceList=document.getElementById('price-list');
+SVC.forEach((s,i)=>{const[bg,em]=ICONS[i];const row=document.createElement('div');row.className='grow';row.innerHTML=`<div class="gi" style="background:${bg}">${em}</div><div class="ginfo"><div class="gname">${s.n}</div><div class="gdesc">${s.d}</div></div><div class="gr"><div class="ptag">$${s.p}</div></div>`;priceList.appendChild(row);});
+
+const schSvc=document.getElementById('sch-svc');
+SVC.forEach((s,i)=>{const o=document.createElement('option');o.value=i;o.textContent=s.n+' ($'+s.p+')';schSvc.appendChild(o);});
+
+renderClients();renderJobs();renderAnalytics();
+setTimeout(()=>{updateHero();calcTl();},200);
+</script>
+</body>
+</html>
